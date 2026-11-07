@@ -1,0 +1,75 @@
+{
+ "run": {
+  "date": "2026-11-07T15:19:24",
+  "today": "2026-11-07",
+  "model": "qwen2.5:7b",
+  "vision_model": "gemma3:4b",
+  "judge_model": null,
+  "cases": 1,
+  "seconds": 37.6,
+  "selection": "cases",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 1,
+   "total": 1,
+   "percent": 100.0
+  },
+  "by_group": {
+   "insights": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "regression": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "insights_savings_labels",
+   "group": "insights",
+   "tags": [
+    "regression"
+   ],
+   "question": "(analytics insights, user with income)",
+   "turns": [],
+   "status": "pass",
+   "expected": "{\"same_days_pct\": 184.0, \"old_pct\": -29.6, \"same_days_note\": \"1–7 Nov vs 1–7 Oct\", \"income\": 52000.0, \"saved\": 48535.0, \"rate\": 93.3}",
+   "got": "[ok/fallback] This month so far: ₹3,465 | Last month: ₹4,920 | vs same days last month: ▲ 184.0% | Biggest category: Bills ₹1,200 | Savings rate: 93.3% || You've spent ₹3,465 so far this month. That's 184.0% more than the same days last month (₹1,220 on 1–7 Oct 2026). Last month in total you spent ₹4,920. Your biggest category is Bills at ₹1,200 (34.6% of your spending). Your Food budget: 17.7% used, ₹2,470 left. You've saved ₹48,535 of your ₹52,000 income so far (93.3%). Your electricity bill (₹1,200, Bills) was much bigger than usual: check whether it was a one-off and plan big purchases ahead. Your shirt (₹1,000) was your second-biggest expense this month: look for a cheaper Shopping option next time. Your dinner (₹450) was your third-biggest expense this month: look for a cheaper Food option next time.",
+   "problems": [],
+   "sql": null,
+   "tools": [
+    "[insights] user 7: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.03s",
+    "[insights] node analyse         started",
+    "[insights]   18 facts computed",
+    "[insights] node analyse         done in 0.01s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 12.54s",
+    "[insights] node check_output    started",
+    "[insights]   AI output rejected (attempt 1): 82.3% is not a percentage from the facts.",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 12.87s",
+    "[insights] node check_output    started",
+    "[insights]   AI output rejected (attempt 2): 82.7% is not a percentage from the facts.",
+    "[insights]   falling back to a plain summary written by code",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 7: finished (ok, fallback)"
+   ],
+   "seconds": 25.5
+  }
+ ]
+}

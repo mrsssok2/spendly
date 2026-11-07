@@ -1,0 +1,731 @@
+{
+ "run": {
+  "date": "2026-11-07T14:37:33",
+  "today": "2026-11-07",
+  "model": "qwen2.5:7b",
+  "vision_model": "gemma3:4b",
+  "judge_model": null,
+  "cases": 10,
+  "seconds": 82.5,
+  "selection": "ml",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 10,
+   "total": 10,
+   "percent": 100.0
+  },
+  "by_group": {
+   "ml": {
+    "passed": 10,
+    "total": 10,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "edge": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "hinglish": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "ml_forecast_backtest",
+   "group": "ml",
+   "tags": [],
+   "question": "forecast_backtest",
+   "turns": [],
+   "status": "pass",
+   "expected": "MAPE <= 10.0%, range coverage >= 60.0%",
+   "got": "MAE ₹2493.44, MAPE 5.35% (run-rate 60.85%, linear regression 6.04%), coverage 66.7% (9 forecasts)",
+   "problems": [],
+   "sql": null,
+   "ml": {
+    "forecast": {
+     "forecasts": 9,
+     "skipped_not_enough_data": 3,
+     "by_model": {
+      "forecast": {
+       "all": {
+        "n": 9,
+        "mae": 2493.44,
+        "mape": 5.35
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 4287.12,
+        "mape": 9.19
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 1058.5,
+        "mape": 2.28
+       }
+      },
+      "run_rate": {
+       "all": {
+        "n": 9,
+        "mae": 32490.59,
+        "mape": 60.85
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 52570.52,
+        "mape": 97.13
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 16426.64,
+        "mape": 31.82
+       }
+      },
+      "linear_regression": {
+       "all": {
+        "n": 9,
+        "mae": 2879.49,
+        "mape": 6.04
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 5007.57,
+        "mape": 10.6
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 1177.03,
+        "mape": 2.4
+       }
+      }
+     },
+     "range_coverage_percent": 66.7,
+     "range_coverage_without_later_spike_percent": 85.7
+    },
+    "anomalies": {
+     "mad": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "iqr": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "meanstd": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "isolation_forest": {
+      "flagged": 75,
+      "true_positives": 5,
+      "false_positives": 70,
+      "precision": 0.067,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": [
+       "2026-05-01 House rent ₹15000",
+       "2026-05-02 Cab ₹233",
+       "2026-05-06 Electricity bill ₹2237",
+       "2026-05-09 Dinner with friends ₹573",
+       "2026-05-10 Groceries ₹1034",
+       "2026-05-16 Dinner with friends ₹700",
+       "2026-05-16 Cab ₹327",
+       "2026-05-17 Groceries ₹685",
+       "2026-05-17 Petrol ₹595",
+       "2026-05-28 Petrol ₹765"
+      ]
+     }
+    },
+    "backtest": [
+     {
+      "month": "2026-05",
+      "cutoff_day": 10,
+      "actual": 40961.0,
+      "status": "not_enough_data",
+      "spike_after": false,
+      "detail": "It needs about 6 weeks of history (you have 10 days) and at least 30 expenses (you have 29)."
+     },
+     {
+      "month": "2026-05",
+      "cutoff_day": 20,
+      "actual": 40961.0,
+      "status": "not_enough_data",
+      "spike_after": false,
+      "detail": "It needs about 6 weeks of history (you have 20 days)."
+     },
+     {
+      "month": "2026-06",
+      "cutoff_day": 10,
+      "actual": 47108.0,
+      "status": "not_enough_data",
+      "spike_after": true,
+      "detail": "It needs about 6 weeks of history (you have 41 days)."
+     },
+     {
+      "month": "2026-06",
+      "cutoff_day": 20,
+      "actual": 47108.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 48538.5,
+      "low": 46609.8,
+      "high": 51345.2,
+      "inside": true,
+      "run_rate": 62290.5,
+      "linear_regression": 48956.2
+     },
+     {
+      "month": "2026-07",
+      "cutoff_day": 10,
+      "actual": 43647.0,
+      "status": "ok",
+      "spike_after": true,
+      "forecast": 38975.0,
+      "low": 36258.6,
+      "high": 42479.1,
+      "inside": false,
+      "run_rate": 76095.7,
+      "linear_regression": 39158.83
+     },
+     {
+      "month": "2026-07",
+      "cutoff_day": 20,
+      "actual": 43647.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 42603.0,
+      "low": 41424.4,
+      "high": 44591.4,
+      "inside": true,
+      "run_rate": 56993.5,
+      "linear_regression": 43121.6
+     },
+     {
+      "month": "2026-08",
+      "cutoff_day": 10,
+      "actual": 51187.0,
+      "status": "ok",
+      "spike_after": true,
+      "forecast": 42526.5,
+      "low": 39987.0,
+      "high": 45964.0,
+      "inside": false,
+      "run_rate": 81061.9,
+      "linear_regression": 43276.56
+     },
+     {
+      "month": "2026-08",
+      "cutoff_day": 20,
+      "actual": 51187.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 49970.0,
+      "low": 48377.1,
+      "high": 52257.3,
+      "inside": true,
+      "run_rate": 63401.2,
+      "linear_regression": 50110.71
+     },
+     {
+      "month": "2026-09",
+      "cutoff_day": 10,
+      "actual": 41067.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 44745.0,
+      "low": 42442.0,
+      "high": 47922.0,
+      "inside": false,
+      "run_rate": 86502.0,
+      "linear_regression": 46796.54
+     },
+     {
+      "month": "2026-09",
+      "cutoff_day": 20,
+      "actual": 41067.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 42382.5,
+      "low": 40804.7,
+      "high": 44507.3,
+      "inside": true,
+      "run_rate": 54643.5,
+      "linear_regression": 42385.78
+     },
+     {
+      "month": "2026-10",
+      "cutoff_day": 10,
+      "actual": 70627.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 70765.0,
+      "low": 68238.0,
+      "high": 73848.6,
+      "inside": true,
+      "run_rate": 173150.5,
+      "linear_regression": 68724.87
+     },
+     {
+      "month": "2026-10",
+      "cutoff_day": 20,
+      "actual": 70627.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 70341.5,
+      "low": 68734.9,
+      "high": 72568.8,
+      "inside": true,
+      "run_rate": 98440.5,
+      "linear_regression": 69510.53
+     }
+    ]
+   },
+   "tools": [],
+   "seconds": 0.0
+  },
+  {
+   "id": "ml_anomaly_spikes",
+   "group": "ml",
+   "tags": [],
+   "question": "anomaly_spikes",
+   "turns": [],
+   "status": "pass",
+   "expected": "recall >= 1.0, precision >= 0.8",
+   "got": "mad: P=1.0 R=1.0; iqr: P=1.0 R=1.0; meanstd: P=1.0 R=1.0; isolation_forest: P=0.067 R=1.0",
+   "problems": [],
+   "sql": null,
+   "ml": {
+    "forecast": {
+     "forecasts": 9,
+     "skipped_not_enough_data": 3,
+     "by_model": {
+      "forecast": {
+       "all": {
+        "n": 9,
+        "mae": 2493.44,
+        "mape": 5.35
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 4287.12,
+        "mape": 9.19
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 1058.5,
+        "mape": 2.28
+       }
+      },
+      "run_rate": {
+       "all": {
+        "n": 9,
+        "mae": 32490.59,
+        "mape": 60.85
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 52570.52,
+        "mape": 97.13
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 16426.64,
+        "mape": 31.82
+       }
+      },
+      "linear_regression": {
+       "all": {
+        "n": 9,
+        "mae": 2879.49,
+        "mape": 6.04
+       },
+       "day_10": {
+        "n": 4,
+        "mae": 5007.57,
+        "mape": 10.6
+       },
+       "day_20": {
+        "n": 5,
+        "mae": 1177.03,
+        "mape": 2.4
+       }
+      }
+     },
+     "range_coverage_percent": 66.7,
+     "range_coverage_without_later_spike_percent": 85.7
+    },
+    "anomalies": {
+     "mad": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "iqr": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "meanstd": {
+      "flagged": 5,
+      "true_positives": 5,
+      "false_positives": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": []
+     },
+     "isolation_forest": {
+      "flagged": 75,
+      "true_positives": 5,
+      "false_positives": 70,
+      "precision": 0.067,
+      "recall": 1.0,
+      "missed": [],
+      "false_alarms": [
+       "2026-05-01 House rent ₹15000",
+       "2026-05-02 Cab ₹233",
+       "2026-05-06 Electricity bill ₹2237",
+       "2026-05-09 Dinner with friends ₹573",
+       "2026-05-10 Groceries ₹1034",
+       "2026-05-16 Dinner with friends ₹700",
+       "2026-05-16 Cab ₹327",
+       "2026-05-17 Groceries ₹685",
+       "2026-05-17 Petrol ₹595",
+       "2026-05-28 Petrol ₹765"
+      ]
+     }
+    },
+    "backtest": [
+     {
+      "month": "2026-05",
+      "cutoff_day": 10,
+      "actual": 40961.0,
+      "status": "not_enough_data",
+      "spike_after": false,
+      "detail": "It needs about 6 weeks of history (you have 10 days) and at least 30 expenses (you have 29)."
+     },
+     {
+      "month": "2026-05",
+      "cutoff_day": 20,
+      "actual": 40961.0,
+      "status": "not_enough_data",
+      "spike_after": false,
+      "detail": "It needs about 6 weeks of history (you have 20 days)."
+     },
+     {
+      "month": "2026-06",
+      "cutoff_day": 10,
+      "actual": 47108.0,
+      "status": "not_enough_data",
+      "spike_after": true,
+      "detail": "It needs about 6 weeks of history (you have 41 days)."
+     },
+     {
+      "month": "2026-06",
+      "cutoff_day": 20,
+      "actual": 47108.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 48538.5,
+      "low": 46609.8,
+      "high": 51345.2,
+      "inside": true,
+      "run_rate": 62290.5,
+      "linear_regression": 48956.2
+     },
+     {
+      "month": "2026-07",
+      "cutoff_day": 10,
+      "actual": 43647.0,
+      "status": "ok",
+      "spike_after": true,
+      "forecast": 38975.0,
+      "low": 36258.6,
+      "high": 42479.1,
+      "inside": false,
+      "run_rate": 76095.7,
+      "linear_regression": 39158.83
+     },
+     {
+      "month": "2026-07",
+      "cutoff_day": 20,
+      "actual": 43647.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 42603.0,
+      "low": 41424.4,
+      "high": 44591.4,
+      "inside": true,
+      "run_rate": 56993.5,
+      "linear_regression": 43121.6
+     },
+     {
+      "month": "2026-08",
+      "cutoff_day": 10,
+      "actual": 51187.0,
+      "status": "ok",
+      "spike_after": true,
+      "forecast": 42526.5,
+      "low": 39987.0,
+      "high": 45964.0,
+      "inside": false,
+      "run_rate": 81061.9,
+      "linear_regression": 43276.56
+     },
+     {
+      "month": "2026-08",
+      "cutoff_day": 20,
+      "actual": 51187.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 49970.0,
+      "low": 48377.1,
+      "high": 52257.3,
+      "inside": true,
+      "run_rate": 63401.2,
+      "linear_regression": 50110.71
+     },
+     {
+      "month": "2026-09",
+      "cutoff_day": 10,
+      "actual": 41067.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 44745.0,
+      "low": 42442.0,
+      "high": 47922.0,
+      "inside": false,
+      "run_rate": 86502.0,
+      "linear_regression": 46796.54
+     },
+     {
+      "month": "2026-09",
+      "cutoff_day": 20,
+      "actual": 41067.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 42382.5,
+      "low": 40804.7,
+      "high": 44507.3,
+      "inside": true,
+      "run_rate": 54643.5,
+      "linear_regression": 42385.78
+     },
+     {
+      "month": "2026-10",
+      "cutoff_day": 10,
+      "actual": 70627.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 70765.0,
+      "low": 68238.0,
+      "high": 73848.6,
+      "inside": true,
+      "run_rate": 173150.5,
+      "linear_regression": 68724.87
+     },
+     {
+      "month": "2026-10",
+      "cutoff_day": 20,
+      "actual": 70627.0,
+      "status": "ok",
+      "spike_after": false,
+      "forecast": 70341.5,
+      "low": 68734.9,
+      "high": 72568.8,
+      "inside": true,
+      "run_rate": 98440.5,
+      "linear_regression": 69510.53
+     }
+    ]
+   },
+   "tools": [],
+   "seconds": 0.0
+  },
+  {
+   "id": "ml_forecast_month",
+   "group": "ml",
+   "tags": [],
+   "question": "how much will I spend this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹38,800, ₹36,400, ₹42,100, ₹22,385",
+   "got": "By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likely go over your ₹37,000 budget around 28 Nov.\nBiggest categories: Bills about ₹17,700, Food about ₹12,200, Transport about ₹4,400.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : 'how much will I spend this month?' -> 'how much will I spend this month?'  [first message]",
+    "code answer : \"By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likel\""
+   ],
+   "seconds": 3.8
+  },
+  {
+   "id": "ml_forecast_month_end",
+   "group": "ml",
+   "tags": [],
+   "question": "what's my month-end forecast?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹38,800, ₹36,400, ₹42,100",
+   "got": "By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likely go over your ₹37,000 budget around 28 Nov.\nBiggest categories: Bills about ₹17,700, Food about ₹12,200, Transport about ₹4,400.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : \"what's my month-end forecast?\" -> \"what's my month-end forecast?\"  [first message]",
+    "code answer : \"By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likel\""
+   ],
+   "seconds": 3.8
+  },
+  {
+   "id": "ml_over_budget",
+   "group": "ml",
+   "tags": [],
+   "question": "will I go over budget?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹38,800, You'll likely go over your ₹37,000 budget around 28 Nov.",
+   "got": "You'll likely go over your ₹37,000 budget around 28 Nov. By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left.\nBiggest categories: Bills about ₹17,700, Food about ₹12,200, Transport about ₹4,400.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : 'will I go over budget?' -> 'will I go over budget?'  [first message]",
+    "code answer : \"You'll likely go over your ₹37,000 budget around 28 Nov. By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹\""
+   ],
+   "seconds": 3.6
+  },
+  {
+   "id": "ml_forecast_food",
+   "group": "ml",
+   "tags": [],
+   "question": "how much will I spend on food this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹12,200, ₹10,400, ₹13,500",
+   "got": "By the end of November 2026 you'll likely spend about ₹12,200 on Food (probably between ₹10,400 and ₹13,500). So far: ₹2,714, with 23 days left. You'll likely go over your ₹10,000 Food budget around 27 Nov.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : 'how much will I spend on food this month?' -> 'how much will I spend on food this month?'  [first message]",
+    "code answer : \"By the end of November 2026 you'll likely spend about ₹12,200 on Food (probably between ₹10,400 and ₹13,500). So far: ₹2,714, with 23 days left. You'l\""
+   ],
+   "seconds": 3.6
+  },
+  {
+   "id": "ml_unusual",
+   "group": "ml",
+   "tags": [],
+   "question": "any unusual expenses?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹32,000, ₹4,500, ₹7,800, ₹2,800, ₹5,200",
+   "got": "I found 5 unusual expenses, newest first:\n• 08 Oct 2026 — New phone: ₹32,000 is about 24× your typical Shopping expense (₹1,316).\n• 08 Sep 2026 — Concert tickets: ₹4,500 is about 8× your typical “tickets” expense in Entertainment (₹544).\n• 14 Aug 2026 — Emergency dental treatment: ₹7,800 is about 14× your typical Health expense (₹538).\n• 17 Jul 2026 — Airport cab: ₹2,800 is about 7× your typical “cab” expense in Transport (₹414).\n• 18 Jun 2026 — Birthday party dinner: ₹5,200 is about 5× your typical “dinner” expense in Food (₹960).\nIf one is fine, click its ⚠️ in Transactions and choose \"This is normal\".",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : 'any unusual expenses?' -> 'any unusual expenses?'  [first message]",
+    "code answer : 'I found 5 unusual expenses, newest first:\\n• 08 Oct 2026 — New phone: ₹32,000 is about 24× your typical Shopping expense (₹1,316).\\n• 08 Sep 2026 — Conc'"
+   ],
+   "seconds": 3.3
+  },
+  {
+   "id": "ml_unusual_strange",
+   "group": "ml",
+   "tags": [],
+   "question": "did anything strange happen in my spending?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹32,000, ₹4,500, ₹7,800, ₹2,800, ₹5,200",
+   "got": "I found 5 unusual expenses, newest first:\n• 08 Oct 2026 — New phone: ₹32,000 is about 24× your typical Shopping expense (₹1,316).\n• 08 Sep 2026 — Concert tickets: ₹4,500 is about 8× your typical “tickets” expense in Entertainment (₹544).\n• 14 Aug 2026 — Emergency dental treatment: ₹7,800 is about 14× your typical Health expense (₹538).\n• 17 Jul 2026 — Airport cab: ₹2,800 is about 7× your typical “cab” expense in Transport (₹414).\n• 18 Jun 2026 — Birthday party dinner: ₹5,200 is about 5× your typical “dinner” expense in Food (₹960).\nIf one is fine, click its ⚠️ in Transactions and choose \"This is normal\".",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "rewrite     : 'did anything strange happen in my spending?' -> 'did anything strange happen in my spending?'  [first message]",
+    "code answer : 'I found 5 unusual expenses, newest first:\\n• 08 Oct 2026 — New phone: ₹32,000 is about 24× your typical Shopping expense (₹1,316).\\n• 08 Sep 2026 — Conc'"
+   ],
+   "seconds": 3.3
+  },
+  {
+   "id": "ml_forecast_hinglish",
+   "group": "ml",
+   "tags": [
+    "hinglish"
+   ],
+   "question": "is mahine kitna kharch hoga?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹38,800, ₹36,400, ₹42,100",
+   "got": "By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likely go over your ₹37,000 budget around 28 Nov.\nBiggest categories: Bills about ₹17,700, Food about ₹12,200, Transport about ₹4,400.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "translate   : original   'is mahine kitna kharch hoga?'",
+    "rewrite     : 'How much will the expenditure be this month?' -> 'How much will the expenditure be this month?'  [first message]",
+    "LOOP STOP   : get_forecast called again with the same arguments -> answer written by code",
+    "tool call   -> get_forecast(period='this month', category='')",
+    "tool call   -> get_forecast(category='', period='by the end of November 2026')"
+   ],
+   "seconds": 39.2
+  },
+  {
+   "id": "ml_not_enough_data",
+   "group": "ml",
+   "tags": [
+    "edge"
+   ],
+   "question": "how much will I spend this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "text: 'not enough data for a forecast'",
+   "got": "Not enough data for a forecast yet. It needs at least 30 expenses (you have 20).",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much will I spend this month?' -> 'how much will I spend this month?'  [first message]",
+    "code answer : 'Not enough data for a forecast yet. It needs at least 30 expenses (you have 20).'"
+   ],
+   "seconds": 3.3
+  }
+ ]
+}

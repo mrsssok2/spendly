@@ -1,0 +1,199 @@
+{
+ "run": {
+  "date": "2026-11-07T15:23:41",
+  "today": "2026-11-07",
+  "model": "qwen2.5:7b",
+  "vision_model": "gemma3:4b",
+  "judge_model": null,
+  "cases": 5,
+  "seconds": 111.8,
+  "selection": "insights",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 4,
+   "total": 4,
+   "percent": 100.0
+  },
+  "by_group": {
+   "insights": {
+    "passed": 4,
+    "total": 4,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "regression": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "insights_tips",
+   "group": "insights",
+   "tags": [],
+   "question": "(analytics insights)",
+   "turns": [],
+   "status": "judge-only",
+   "expected": "",
+   "got": "[ok/ai] Your savings so far are ₹48,535 (93.3% of income) — keep up the good work with your high savings rate. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your savings so",
+   "problems": [],
+   "sql": null,
+   "judge": {
+    "status": "skipped (run with --judge)"
+   },
+   "tools": [
+    "[insights] user 7: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.01s",
+    "[insights] node analyse         started",
+    "[insights]   18 facts computed",
+    "[insights] node analyse         done in 0.01s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 11.35s",
+    "[insights] node check_output    started",
+    "[insights]   AI output rejected (attempt 1): 82.3% is not a percentage from the facts. The only percentages you may write are: 17.7% = budget_used_pct; 32.5% = category_change_pct; 34.6% = category_share_pct; 42.9% = category_change_pct; 93.3% = savings_rate_pct; 183.3% = category_change_pct; 184% =",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 12.67s",
+    "[insights] node check_output    started",
+    "[insights]   AI output passed the check",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 7: finished (ok, ai)"
+   ],
+   "seconds": 24.1
+  },
+  {
+   "id": "insights_no_income_no_savings",
+   "group": "insights",
+   "tags": [
+    "regression"
+   ],
+   "question": "(analytics insights, ML demo user)",
+   "turns": [],
+   "status": "pass",
+   "expected": "{\"same_days_pct\": -2.1, \"old_pct\": -68.3, \"same_days_note\": \"1–7 Nov vs 1–7 Oct\", \"income\": 0, \"saved\": -22385.0, \"rate\": null}",
+   "got": "[ok/ai] This month so far: ₹22,385 | Last month: ₹70,627 | vs same days last month: ▼ 2.1% | Biggest category: Bills ₹16,585 | Forecast vs last month: ▼ 45.1% || Your overall budget has ₹14,615 left, with 60.5% used so far. Bills are your biggest category at ₹16,585, while your food budget is at ₹2,714, leaving you ₹7,286 under budget. Your biggest single expense was House rent (₹15,000) — Consider negotiating your rent to lower future bills. Your Food category is at ₹2,714 this month — Try meal planning to reduce unnecessary spending. Your overall spending is on track to exceed its ₹37,000 monthly budget around 28 Nov (forecast: about ₹38,800 by month-end) — Cut back on non-essential expenses like Entertainment (₹631) to stay within budget.",
+   "problems": [],
+   "sql": null,
+   "tools": [
+    "[insights] user 9: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.33s",
+    "[insights] node analyse         started",
+    "[insights]   20 facts computed",
+    "[insights] node analyse         done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 11.93s",
+    "[insights] node check_output    started",
+    "[insights]   AI output passed the check",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 9: finished (ok, ai)"
+   ],
+   "seconds": 12.3
+  },
+  {
+   "id": "insights_change_same_days",
+   "group": "insights",
+   "tags": [
+    "regression"
+   ],
+   "question": "(analytics insights)",
+   "turns": [],
+   "status": "pass",
+   "expected": "{\"same_days_pct\": 184.0, \"old_pct\": -29.6, \"same_days_note\": \"1–7 Nov vs 1–7 Oct\", \"income\": 52000.0, \"saved\": 48535.0, \"rate\": 93.3}",
+   "got": "[ok/ai] This month so far: ₹3,465 | Last month: ₹4,920 | vs same days last month: ▲ 184.0% | Biggest category: Bills ₹1,200 | Savings rate: 93.3% || Your savings so far are ₹48,535 (93.3% of income) — keep up the good work with your high savings rate. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your savings so far are ₹48,535 (93.3% of income) — keep up the good work with your high savings rate.",
+   "problems": [],
+   "sql": null,
+   "tools": [
+    "[insights] user 7: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.03s",
+    "[insights] node analyse         started",
+    "[insights]   18 facts computed",
+    "[insights] node analyse         done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 10.83s",
+    "[insights] node check_output    started",
+    "[insights]   AI output rejected (attempt 1): 82.3% is not a percentage from the facts. The only percentages you may write are: 17.7% = budget_used_pct; 32.5% = category_change_pct; 34.6% = category_share_pct; 42.9% = category_change_pct; 93.3% = savings_rate_pct; 183.3% = category_change_pct; 184% =",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 13.02s",
+    "[insights] node check_output    started",
+    "[insights]   AI output passed the check",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 7: finished (ok, ai)"
+   ],
+   "seconds": 23.9
+  },
+  {
+   "id": "insights_savings_labels",
+   "group": "insights",
+   "tags": [
+    "regression"
+   ],
+   "question": "(analytics insights, user with income)",
+   "turns": [],
+   "status": "pass",
+   "expected": "{\"same_days_pct\": 184.0, \"old_pct\": -29.6, \"same_days_note\": \"1–7 Nov vs 1–7 Oct\", \"income\": 52000.0, \"saved\": 48535.0, \"rate\": 93.3}",
+   "got": "[ok/ai] This month so far: ₹3,465 | Last month: ₹4,920 | vs same days last month: ▲ 184.0% | Biggest category: Bills ₹1,200 | Savings rate: 93.3% || Your savings so far are ₹48,535 (93.3% of income) — keep up the good work with your high savings rate. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your biggest single expense was electricity bill ₹1,200 (Bills category, 05 Nov 2026) — look for ways to lower your electricity usage. Your Bills category is at ₹1,200 this month so far — consider negotiating your bills to reduce costs. Your savings so far are ₹48,535 (93.3% of income) — keep up the good work with your high savings rate.",
+   "problems": [],
+   "sql": null,
+   "tools": [
+    "[insights] user 7: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.02s",
+    "[insights] node analyse         started",
+    "[insights]   18 facts computed",
+    "[insights] node analyse         done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 11.10s",
+    "[insights] node check_output    started",
+    "[insights]   AI output rejected (attempt 1): 82.3% is not a percentage from the facts. The only percentages you may write are: 17.7% = budget_used_pct; 32.5% = category_change_pct; 34.6% = category_share_pct; 42.9% = category_change_pct; 93.3% = savings_rate_pct; 183.3% = category_change_pct; 184% =",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 12.63s",
+    "[insights] node check_output    started",
+    "[insights]   AI output passed the check",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 7: finished (ok, ai)"
+   ],
+   "seconds": 23.8
+  },
+  {
+   "id": "insights_forecast_tip",
+   "group": "insights",
+   "tags": [],
+   "question": "(analytics insights, ML demo user)",
+   "turns": [],
+   "status": "pass",
+   "expected": "{\"same_days_pct\": -2.1, \"old_pct\": -68.3, \"same_days_note\": \"1–7 Nov vs 1–7 Oct\", \"income\": 0, \"saved\": -22385.0, \"rate\": null}",
+   "got": "[ok/ai] This month so far: ₹22,385 | Last month: ₹70,627 | vs same days last month: ▼ 2.1% | Biggest category: Bills ₹16,585 | Forecast vs last month: ▼ 45.1% || Your overall budget has ₹14,615 left, with 60.5% used so far. Bills are your biggest category at ₹16,585, while your food budget is at ₹2,714, leaving you ₹7,286 under budget. Your biggest single expense was House rent (₹15,000) — Consider negotiating your rent to lower future bills. Your Food category is at ₹2,714 this month — Try meal planning to reduce unnecessary spending. Your overall spending is on track to exceed its ₹37,000 monthly budget around 28 Nov (forecast: about ₹38,800 by month-end) — Cut back on non-essential expenses like Entertainment (₹631) to stay within budget.",
+   "problems": [],
+   "sql": null,
+   "tools": [
+    "[insights] user 9: starting",
+    "[insights] node fetch_data      started",
+    "[insights] node fetch_data      done in 0.36s",
+    "[insights] node analyse         started",
+    "[insights]   20 facts computed",
+    "[insights] node analyse         done in 0.00s",
+    "[insights] node write_insights  started",
+    "[insights] node write_insights  done in 11.86s",
+    "[insights] node check_output    started",
+    "[insights]   AI output passed the check",
+    "[insights] node check_output    done in 0.00s",
+    "[insights] user 9: finished (ok, ai)"
+   ],
+   "seconds": 12.6
+  }
+ ]
+}

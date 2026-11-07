@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Register · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+{% with auth_heading = "Start tracking smarter in under a minute." %}{% include "_auth_art.html" %}{% endwith %}
+<section class="form-card">
+    <h1>Create your account</h1>
+    <p class="form-subtitle">{{ ai_text.register_subtitle }}</p>
+
+    {% if errors %}
+    <div class="alert alert-error">
+        <ul>
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('register') }}">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{ form.name or '' }}" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ form.email or '' }}" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" minlength="6" required>
+
+        <label for="confirm_password">Confirm password</label>
+        <input type="password" id="confirm_password" name="confirm_password" minlength="6" required>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+
+    <p class="form-footer">
+        Already have an account? <a href="{{ url_for('login') }}">Log in</a>
+    </p>
+</section>
+</div>
+{% endblock %}

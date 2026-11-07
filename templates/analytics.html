@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analytics.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="page-head">
+    <h1 class="page-title">📊 <span class="gradient-text">Analytics</span></h1>
+    <p class="muted">Where your money went, month by month, category by category.</p>
+</header>
+
+{# ---- Summary cards: always this month vs last month ---- #}
+<section class="summary-cards">
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-1" aria-hidden="true">📅</span>
+        <p class="card-label">This month</p>
+        <p class="card-value" data-count="{{ comparison.this_total }}">{{ comparison.this_total | inr }}</p>
+        <p class="card-sub">{{ this_month_label }}</p>
+    </div>
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-2" aria-hidden="true">🗓️</span>
+        <p class="card-label">Last month</p>
+        <p class="card-value" data-count="{{ comparison.last_total }}">{{ comparison.last_total | inr }}</p>
+        <p class="card-sub">{{ last_month_label }}</p>
+    </div>
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-3" aria-hidden="true">📈</span>
+        <p class="card-label">vs same days last month</p>
+        {% set change = same_days.change_percent %}
+        {% if change is none %}
+        <p class="card-value">—</p>
+        <p class="card-sub">No spending in the same days last month ({{ same_days.label }})</p>
+        {% elif change > 0 %}
+        <p class="card-value change-up"><span aria-hidden="true">▲</span> {{ change }}%</p>
+        <p class="card-sub">More: {{ same_days.label }}</p>
+        {% elif change < 0 %}
+        <p class="card-value change-down"><span aria-hidden="true">▼</span> {{ change | abs }}%</p>
+        <p class="card-sub">Less: {{ same_days.label }}</p>
+        {% else %}
+        <p class="card-value">0%</p>
+        <p class="card-sub">Same: {{ same_days.label }}</p>
+        {% endif %}
+        {% if forecast_change %}
+        <p class="card-sub forecast-change">Forecast vs last month:
+            {% if forecast_change.percent > 0 %}▲ {{ forecast_change.percent }}%{% elif forecast_change.percent < 0 %}▼ {{ forecast_change.percent | abs }}%{% else %}0%{% endif %}
+            (≈ {{ forecast_change.expected | inr }} by month-end)</p>
+        {% endif %}
+    </div>
+</section>
+
+{% if not has_any_expenses %}
+<section class="panel empty-state">
+    <div class="empty-art" aria-hidden="true">📊</div>
+    <h2>No expenses yet</h2>
+    <p class="muted">Your charts will appear here once you've added some expenses.</p>
+    <a href="{{ url_for('add_expense_page') }}" class="btn empty-cta">+ Add your first expense</a>
+</section>
+{% else %}
+
+<section class="panel insights-panel" id="insights" data-url="{{ url_for('analytics_insights') }}">
+    <div class="insights-header">
+        <div>
+            <h2><span class="insights-spark" aria-hidden="true">✨</span> AI insights</h2>
+            <p class="muted insights-hint">A short summary and saving tips for this month, written by {{ ai_text.insights_by }} from your real numbers. Nothing is changed.</p>
+        </div>
+        <button type="button" class="btn btn-sm" id="insights-button">✨ Get insights</button>
+    </div>
+    <div id="insights-output" aria-live="polite"></div>
+</section>
+
+{# Always this month (not the date filter): actual so far vs the forecast and its likely range. #}
+<section class="panel chart-panel forecast-chart-panel" id="forecast">
+    <h2><span aria-hidden="true">🔮</span> This month: actual vs forecast <span class="chart-subtitle">{{ this_month_label }}</span></h2>
+    {% if charts.forecast %}
+    <p class="muted chart-note">Running total so far, then the likely path to month-end ({{ forecast.low | inr }}–{{ forecast.high | inr }}, most likely {{ forecast.expected | inr }}).{% if forecast.budget %} {{ forecast.budget.message }}{% endif %}</p>
+    <div class="chart-box"><canvas id="chart-forecast" aria-label="Line chart of this month's running total and the forecast to month-end" role="img"></canvas></div>
+    {% else %}
+    <p class="chart-empty">{{ forecast.message }}. {{ forecast.detail }}</p>
+    {% endif %}
+</section>
+
+{% include "_date_filter.html" %}
+
+<div class="chart-grid">
+    <section class="panel chart-panel chart-wide">
+        <h2><span aria-hidden="true">📆</span> Spending per month <span class="chart-subtitle">{{ charts.monthly.title }}</span></h2>
+        {% if charts.monthly.has_data %}
+        <div class="chart-box"><canvas id="chart-monthly" aria-label="Bar chart of spending per month" role="img"></canvas></div>
+        {% else %}
+        <p class="chart-empty">No spending in this period yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel chart-panel chart-wide">
+        <h2><span aria-hidden="true">💵</span> Income vs expenses <span class="chart-subtitle">{{ charts.income_vs_expenses.title }}</span></h2>
+        {% if charts.income_vs_expenses.has_data %}
+        <div class="chart-box"><canvas id="chart-income" aria-label="Bar chart of income and expenses per month" role="img"></canvas></div>
+        {% if not charts.income_vs_expenses.has_income %}
+        <p class="chart-note muted">No income recorded in this period yet. <a href="{{ url_for('add_income_page') }}">Add income</a> to compare.</p>
+        {% endif %}
+        {% else %}
+        <p class="chart-empty">No income or spending in this period yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel chart-panel">
+        <h2><span aria-hidden="true">🍩</span> By category <span class="chart-subtitle">{{ charts.categories.title }}</span></h2>
+        {% if charts.categories.has_data %}
+        <div class="chart-box"><canvas id="chart-categories" aria-label="Doughnut chart of spending by category" role="img"></canvas></div>
+        {% else %}
+        <p class="chart-empty">No spending in this period yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel chart-panel">
+        <h2><span aria-hidden="true">📉</span> Daily spending <span class="chart-subtitle">{{ charts.daily.title }}</span></h2>
+        {% if charts.daily.has_data %}
+        <div class="chart-box"><canvas id="chart-daily" aria-label="Line chart of daily spending" role="img"></canvas></div>
+        {% else %}
+        <p class="chart-empty">No spending on any day in this period yet.</p>
+        {% endif %}
+    </section>
+</div>
+
+{# All numbers were calculated by SQLite. tojson makes this safe to embed in the page. #}
+<script type="application/json" id="analytics-data">{{ charts | tojson }}</script>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if has_any_expenses %}
+<script src="{{ url_for('static', filename='js/insights.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+        integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4"
+        crossorigin="anonymous"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endif %}
+{% endblock %}

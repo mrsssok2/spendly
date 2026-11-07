@@ -1,0 +1,20 @@
+{# Decorative side panel for the login and register pages. Not a page: it doesn't extend base.html. #}
+<aside class="auth-art" aria-hidden="true">
+    <div class="auth-art-inner">
+        <p class="auth-art-eyebrow">Spendly</p>
+        <h2>{{ auth_heading }}</h2>
+        <ul class="auth-points">
+            <li><span>📊</span> Charts for every month and category</li>
+            <li><span>🎯</span> Budgets that warn you at 80%</li>
+            <li><span>🤖</span> {{ ai_text.auth_point }}</li>
+        </ul>
+        <div class="auth-card-stack">
+            <div class="auth-mini-card">
+                <span class="auth-mini-label">This month</span>
+                <span class="auth-mini-value">₹12,480</span>
+                <span class="auth-mini-bar"><span style="width: 68%"></span></span>
+            </div>
+            <div class="auth-mini-card auth-mini-card-2">🍜 Food <strong>₹3,240</strong></div>
+        </div>
+    </div>
+</aside>

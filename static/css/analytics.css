@@ -1,0 +1,277 @@
+/* Styles for the analytics page only (cards, panels and the filter come from profile.css). */
+
+.page-head {
+    margin-bottom: 1.5rem;
+}
+
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+}
+
+.change-up {
+    color: var(--danger);     /* spending went up */
+}
+
+.change-down {
+    color: var(--success);    /* spending went down */
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1.5rem;
+}
+
+.chart-wide {
+    grid-column: 1 / -1;
+}
+
+.chart-panel {
+    transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.chart-panel:hover {
+    box-shadow: var(--shadow);
+}
+
+.chart-box {
+    position: relative;
+    height: 290px;
+}
+
+.chart-empty {
+    color: var(--muted);
+    text-align: center;
+    padding: 3rem 1rem;
+    background: repeating-linear-gradient(-45deg, var(--surface-2), var(--surface-2) 10px, var(--surface-3) 10px, var(--surface-3) 20px);
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+}
+
+.chart-note {
+    margin-top: 0.75rem;
+    font-size: 0.88rem;
+}
+
+@media (max-width: 760px) {
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- AI insights ---------- */
+.insights-panel {
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    background:
+        linear-gradient(var(--surface), var(--surface)) padding-box,
+        var(--gradient) border-box;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.12);
+}
+
+.insights-panel::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: var(--gradient-soft);
+    pointer-events: none;
+}
+
+.insights-header {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.insights-header h2 {
+    margin-bottom: 0.25rem;
+}
+
+.insights-spark {
+    display: inline-block;
+    animation: twinkle 2.4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { transform: scale(1) rotate(0); opacity: 1; }
+    50% { transform: scale(1.25) rotate(15deg); opacity: 0.75; }
+}
+
+.insights-hint {
+    font-size: 0.9rem;
+}
+
+.insights-header .btn-sm {
+    padding: 0.6rem 1.1rem;
+    white-space: nowrap;
+}
+
+#insights-output:not(:empty) {
+    position: relative;
+    margin-top: 1.25rem;
+}
+
+.insights-message {
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    background: var(--surface-3);
+    color: var(--muted);
+    animation: bubble-in 0.35s var(--ease) both;
+}
+
+.insights-loading {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Shimmering placeholder lines while the AI works */
+.insights-skeleton {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+}
+
+.insights-skeleton span {
+    display: block;
+    height: 14px;
+    border-radius: 7px;
+    background: linear-gradient(90deg, var(--track) 0%, var(--surface-2) 40%, var(--track) 80%);
+    background-size: 300% 100%;
+    animation: shimmer 1.4s linear infinite;
+}
+
+.insights-skeleton span:nth-child(1) { width: 92%; }
+.insights-skeleton span:nth-child(2) { width: 78%; }
+.insights-skeleton span:nth-child(3) { width: 85%; }
+.insights-skeleton span:nth-child(4) { width: 60%; }
+
+@keyframes shimmer {
+    from { background-position: 100% 0; }
+    to { background-position: -50% 0; }
+}
+
+.insights-error {
+    background: var(--danger-soft);
+    color: var(--danger-text);
+}
+
+.insights-detail {
+    display: block;
+    margin-top: 0.3rem;
+}
+
+.insights-card {
+    animation: bubble-in 0.45s var(--ease) both;
+}
+
+.insights-numbers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.1rem;
+}
+
+.insights-number {
+    background: var(--gradient-soft);
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.insights-number-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.insights-number-value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.insights-number-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.insights-summary {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1.02rem;
+}
+
+.insights-tips-title {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+.insights-tips {
+    list-style: none;
+    counter-reset: tip;
+    display: grid;
+    gap: 0.6rem;
+}
+
+.insights-tips li {
+    counter-increment: tip;
+    position: relative;
+    padding: 0.75rem 0.9rem 0.75rem 3rem;
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--divider);
+    line-height: 1.5;
+    animation: bubble-in 0.4s var(--ease) both;
+}
+
+.insights-tips li:nth-child(2) { animation-delay: 0.1s; }
+.insights-tips li:nth-child(3) { animation-delay: 0.2s; }
+
+.insights-tips li::before {
+    content: counter(tip);
+    position: absolute;
+    left: 0.85rem;
+    top: 0.75rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insights-note {
+    margin-top: 0.85rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+@keyframes bubble-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 560px) {
+    .insights-header {
+        flex-direction: column;
+    }
+}
+
+/* ---------- This month: actual vs forecast ---------- */
+.forecast-chart-panel { margin-bottom: 1.25rem; }
+.forecast-chart-panel .chart-note { margin-bottom: 0.5rem; }

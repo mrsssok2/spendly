@@ -1,0 +1,725 @@
+{
+ "run": {
+  "date": "2026-11-07T04:21:10",
+  "today": "2026-11-07",
+  "model": "qwen2.5:7b",
+  "vision_model": "gemma3:4b",
+  "judge_model": null,
+  "cases": 21,
+  "seconds": 419.9,
+  "selection": "rerun",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 21,
+   "total": 21,
+   "percent": 100.0
+  },
+  "by_group": {
+   "actions": {
+    "passed": 13,
+    "total": 13,
+    "percent": 100.0
+   },
+   "comparison": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "counts": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "empty": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "totals": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   },
+   "wording": {
+    "passed": 2,
+    "total": 2,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "edge": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   },
+   "hinglish": {
+    "passed": 2,
+    "total": 2,
+    "percent": 100.0
+   },
+   "regression": {
+    "passed": 20,
+    "total": 20,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "total_today",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "how much did I spend today?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=360",
+   "got": "You spent ₹360 today across 2 expenses.\nBy category: Transport ₹280, Food ₹80",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend today?' -> 'how much did I spend today?'  [first message]",
+    "LOOP STOP   : find_expenses called again with the same arguments -> answer written by code",
+    "tool call   -> find_expenses(sort_by='newest', limit=5, date='2026-11-07', period='today')",
+    "tool call   -> find_expenses(date_from='', date_to='', description='chai', category='Food', period='today', sort_by='newest', limit=5)",
+    "tool call   -> find_expenses(description='chai', date='today')",
+    "code fallback -> get_spending_summary(period='today', category='')"
+   ],
+   "seconds": 39.3
+  },
+  {
+   "id": "total_day_before_yesterday",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "how much did I spend day before yesterday?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=1260",
+   "got": "You spent ₹1,260 day before yesterday across 2 expenses.\nBy category: Bills ₹1,200, Transport ₹60",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend day before yesterday?' -> 'how much did I spend day before yesterday?'  [first message]",
+    "LOOP STOP   : find_expenses called again with the same arguments -> answer written by code",
+    "tool call   -> find_expenses(date_from='2026-11-05', date_to='2026-11-05', period='day before yesterday', limit=1)",
+    "tool call   -> find_expenses(description='bus', date_from='2026-11-04', date_to='2026-11-04')",
+    "code fallback -> get_spending_summary(period='day before yesterday', category='')"
+   ],
+   "seconds": 23.0
+  },
+  {
+   "id": "total_transport_last_month",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "transport spending in October 2026",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=900",
+   "got": "You spent ₹900 on Transport in October 2026 across 3 expenses.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'transport spending in October 2026' -> 'transport spending in October 2026'  [first message]",
+    "LOOP STOP   : find_expenses called again with the same arguments -> answer written by code",
+    "tool call   -> find_expenses(category='Transport', period='october 2026')",
+    "tool call   -> find_expenses(category='Transport', period='october 2026', sort_by='newest', limit=3)",
+    "code fallback -> get_spending_summary(period='October 2026', category='Transport')"
+   ],
+   "seconds": 15.6
+  },
+  {
+   "id": "count_this_week",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many expenses this week?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=8",
+   "got": "Number of expenses this week: 8.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, 2026-11-02 to 2026-11-08",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses this week?' -> 'how many expenses this week?'  [first message]",
+    "LOOP STOP   : find_expenses called again with the same arguments -> answer written by code",
+    "tool call   -> find_expenses(period='this week', limit=10, sort_by='newest')",
+    "tool call   -> find_expenses(period='this week', sort_by='newest', limit=8)",
+    "code fallback -> run_sql_query(measure='count'): the AI didn't use run_sql_query",
+    "sql TEMPLATE: count from the user's words  (1 ms)  period=this week -> 'Number of expenses this week: 8.'",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 15.9
+  },
+  {
+   "id": "top_weekday",
+   "group": "comparison",
+   "tags": [
+    "regression"
+   ],
+   "question": "which day of the week do I spend the most?",
+   "turns": [],
+   "status": "pass",
+   "expected": "names=Saturday",
+   "got": "You spend the most on Saturday (₹2,180.00).\nBy day of the week:\n- Saturday: ₹2,180.00 (6 expenses)\n- Sunday: ₹2,150.00 (2 expenses)\n- Tuesday: ₹1,800.00 (3 expenses)\n- Thursday: ₹1,790.00 (4 expenses)\n- Wednesday: ₹1,250.00 (2 expenses)\n- Friday: ₹545.00 (2 expenses)\n- Monday: ₹520.00 (1 expense)",
+   "problems": [],
+   "sql": "SELECT CAST(strftime('%w', date) AS INTEGER) AS weekday, COUNT(*) AS count, ROUND(SUM(amount), 2) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?) GROUP BY weekday ORDER BY total DESC, weekday\n-- your expenses only, all time\n-- weekday: 0 = Sunday ... 6 = Saturday",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'which day of the week do I spend the most?' -> 'which day of the week do I spend the most?'  [first message]",
+    "code answer : 'You spend the most on Saturday (₹2,180.00).\\nBy day of the week:\\n- Saturday: ₹2,180.00 (6 expenses)\\n- Sunday: ₹2,150.00 (2 expenses)\\n- Tuesday: ₹1,800.'"
+   ],
+   "seconds": 1.6
+  },
+  {
+   "id": "empty_shopping_today",
+   "group": "empty",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how much did I spend on shopping today?",
+   "turns": [],
+   "status": "pass",
+   "expected": "no matching expenses",
+   "got": "You have no Shopping expenses today.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend on shopping today?' -> 'how much did I spend on shopping today?'  [first message]",
+    "LOOP STOP   : find_expenses called again with the same arguments -> answer written by code",
+    "tool call   -> find_expenses(category='Shopping', date='2026-11-07', sort_by='newest', limit=1)",
+    "tool call   -> find_expenses(description='Shopping', date_from='2023-10-10', date_to='2023-10-10', period='today', category='Shopping')",
+    "tool call   -> find_expenses(sort_by='newest', description='Shopping', date_from='2023-10-10', date_to='2023-10-10', period='today', category='Shopping', limit=5)",
+    "code fallback -> get_spending_summary(period='today', category='Shopping')"
+   ],
+   "seconds": 24.5
+  },
+  {
+   "id": "typo_this_month",
+   "group": "wording",
+   "tags": [
+    "regression"
+   ],
+   "question": "how much did i spnd this mnth?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "You spent ₹3,465 this month across 8 expenses.\nBy category: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did i spend this month?' -> 'how much did i spend this month?'  [first message]",
+    "LOOP STOP   : get_spending_summary called again with the same arguments -> answer written by code",
+    "tool call   -> get_spending_summary(period='this month')"
+   ],
+   "seconds": 11.7
+  },
+  {
+   "id": "typo_average",
+   "group": "wording",
+   "tags": [
+    "regression"
+   ],
+   "question": "avrage expense amout",
+   "turns": [],
+   "status": "pass",
+   "expected": "avg=511.75",
+   "got": "Average amount per expense: ₹511.75 (20 expenses).",
+   "problems": [],
+   "sql": "SELECT ROUND(AVG(amount), 2) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'average_per_expense' (fixed query; the AI only picked it)\n-- your expenses only, all time",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'average expense amount' -> 'average expense amount'  [first message]",
+    "sql TEMPLATE: average_per_expense from the user's words (AI picked 'average_per_day')  (2 ms)  period=in total -> 'Average amount per expense: ₹511.75 (20 expenses).'",
+    "sql REPEAT  : template average_per_expense already ran -> earlier result returned",
+    "sql LIMIT   : 2 queries already ran -> answer written by code",
+    "tool call   -> run_sql_query(measure='average_per_day', period='')",
+    "tool call   -> run_sql_query(measure='average_per_expense', period='')",
+    "sql reply   : query limit reached, answer built in code from the last result (template average_per_expense: answer written by code)"
+   ],
+   "seconds": 15.3
+  },
+  {
+   "id": "add_chai_today",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "spent 150 on chai today",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 150, \"category\": \"Food\", \"date\": \"2026-11-07\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 150.0,
+     "category": "Food",
+     "date": "2026-11-07",
+     "description": "chai"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'spent 150 on chai today' -> 'spent 150 on chai today'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(amount=150, category='Food', date='2026-11-07', description='chai')"
+   ],
+   "seconds": 12.6
+  },
+  {
+   "id": "add_auto_yesterday",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "paid 280 for auto yesterday",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 280, \"category\": \"Transport\", \"date\": \"2026-11-06\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 280.0,
+     "category": "Transport",
+     "date": "2026-11-06",
+     "description": "auto"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'paid 280 for auto yesterday' -> 'paid 280 for auto yesterday'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(description='auto', amount=280, category='Transport', date='2026-11-06')"
+   ],
+   "seconds": 13.1
+  },
+  {
+   "id": "add_medicine_dby",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "bought medicines for 95 day before yesterday",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 95, \"category\": \"Health\", \"date\": \"2026-11-05\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 95.0,
+     "category": "Health",
+     "date": "2026-11-05",
+     "description": "medicines"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'bought medicines for 95 day before yesterday' -> 'bought medicines for 95 day before yesterday'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(amount=95, category='Health', date='2026-11-05', description='medicines')"
+   ],
+   "seconds": 14.3
+  },
+  {
+   "id": "add_two",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "lunch 220 and cab 340 today",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 220, \"category\": \"Food\", \"date\": \"2026-11-07\"}, {\"type\": \"add\", \"amount\": 340, \"category\": \"Transport\", \"date\": \"2026-11-07\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 220.0,
+     "category": "Food",
+     "date": "2026-11-07",
+     "description": "lunch"
+    },
+    {
+     "type": "add",
+     "amount": 340.0,
+     "category": "Transport",
+     "date": "2026-11-07",
+     "description": "cab"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'lunch 220 and cab 340 today' -> 'lunch 220 and cab 340 today'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(amount=220, category='Food', date='2026-11-07', description='lunch')",
+    "tool call   -> add_expense_tool(amount=340, category='Transport', date='2026-11-07', description='cab')"
+   ],
+   "seconds": 15.3
+  },
+  {
+   "id": "add_hinglish_chai",
+   "group": "actions",
+   "tags": [
+    "hinglish",
+    "regression"
+   ],
+   "question": "aaj chai pe 30 rupaye kharch kiye",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 30, \"category\": \"Food\", \"date\": \"2026-11-07\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 30.0,
+     "category": "Food",
+     "date": "2026-11-07",
+     "description": "chai"
+    }
+   ],
+   "tools": [
+    "translate   : original   'aaj chai pe 30 rupaye kharch kiye'",
+    "rewrite     : 'Spent 30 on chai today' -> 'Spent 30 on chai today'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(description='chai', amount=30, category='Food', date='2026-11-07')"
+   ],
+   "seconds": 21.8
+  },
+  {
+   "id": "add_hinglish_auto",
+   "group": "actions",
+   "tags": [
+    "hinglish",
+    "regression"
+   ],
+   "question": "kal auto mein 120 diye",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 120, \"category\": \"Transport\", \"date\": \"2026-11-06\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 120.0,
+     "category": "Transport",
+     "date": "2026-11-06",
+     "description": "auto"
+    }
+   ],
+   "tools": [
+    "translate   : original   'kal auto mein 120 diye'",
+    "rewrite     : 'Spent 120 on auto yesterday' -> 'Spent 120 on auto yesterday'  [first message]",
+    "LOOP STOP   : add_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(amount=120, category='Transport', date='2026-11-06', description='auto')"
+   ],
+   "seconds": 17.8
+  },
+  {
+   "id": "edit_chai_amount",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "change the chai expense to 90",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"edit\", \"before\": {\"description\": \"chai\", \"amount\": 80}, \"after\": {\"amount\": 90}}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "edit",
+     "before": {
+      "amount": 80.0,
+      "category": "Food",
+      "date": "2026-11-07",
+      "description": "chai"
+     },
+     "after": {
+      "amount": 90.0,
+      "category": "Food",
+      "date": "2026-11-07",
+      "description": "chai"
+     }
+    }
+   ],
+   "tools": [
+    "rewrite     : 'change the chai expense to 90' -> 'change the chai expense to 90'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> update_expense_tool(match_description='chai', new_amount=90)",
+    "tool call   -> update_expense_tool(match_description='chai', match_category='Food', match_date='2026-11-07', new_amount=100)",
+    "tool call   -> update_expense_tool(match_description='chai', new_amount=200, new_category='Food')",
+    "tool call   -> update_expense_tool(match_description='chai', new_amount=250, new_category='Food', new_date='2023-10-15', new_description='chai tea')",
+    "tool call   -> update_expense_tool(match_description='chai', match_category='Food', new_amount=250, new_category='Beverages')",
+    "tool call   -> set_budget_tool(amount=5000, category='Food')",
+    "tool call   -> set_budget_tool(amount=1500, category='Food')"
+   ],
+   "seconds": 36.3
+  },
+  {
+   "id": "edit_movie_actually",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "the movie was actually 350",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"edit\", \"before\": {\"description\": \"movie\"}, \"after\": {\"amount\": 350}}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "edit",
+     "before": {
+      "amount": 300.0,
+      "category": "Entertainment",
+      "date": "2026-11-03",
+      "description": "movie"
+     },
+     "after": {
+      "amount": 350.0,
+      "category": "Entertainment",
+      "date": "2026-11-03",
+      "description": "movie"
+     }
+    }
+   ],
+   "tools": [
+    "rewrite     : 'the movie was actually 350' -> 'the movie was actually 350'  [first message]",
+    "LOOP STOP   : update_expense_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_expense_tool(description='movie', amount=350, category='Entertainment', date='2026-11-06')",
+    "tool call   -> update_expense_tool(match_description='movie', new_amount=350)",
+    "tool call   -> update_expense_tool(match_description='movie', match_category='Entertainment', match_date='2026-11-03', new_amount=300, new_category='Entertainment', new_date='2026-11-03', new_description='movie')",
+    "tool call   -> update_expense_tool(match_amount=250, new_amount=300)"
+   ],
+   "seconds": 21.7
+  },
+  {
+   "id": "delete_shirt",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "delete the shirt expense",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"delete\", \"before\": {\"description\": \"shirt\", \"amount\": 1000}}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "delete",
+     "before": {
+      "amount": 1000.0,
+      "category": "Shopping",
+      "date": "2026-11-03",
+      "description": "shirt"
+     }
+    }
+   ],
+   "tools": [
+    "rewrite     : 'delete the shirt expense' -> 'delete the shirt expense'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> delete_expense_tool(match_description='shirt', match_category='Shopping', match_date='2026-11-06')",
+    "tool call   -> delete_expense_tool(match_description='shirt', match_category='Shopping', match_date='2026-11-03')",
+    "tool call   -> update_expense_tool(match_description='chai', match_category='Food', new_amount=250, new_category='Beverages')",
+    "tool call   -> set_budget_tool(category='Food', amount=5000)",
+    "tool call   -> set_budget_tool(amount=1500, category='Food')"
+   ],
+   "seconds": 24.6
+  },
+  {
+   "id": "delete_auto",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "delete the auto expense",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"delete\", \"before\": {\"description\": \"auto\", \"amount\": 280}}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "delete",
+     "before": {
+      "amount": 280.0,
+      "category": "Transport",
+      "date": "2026-11-07",
+      "description": "auto"
+     }
+    }
+   ],
+   "tools": [
+    "rewrite     : 'delete the auto expense' -> 'delete the auto expense'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> delete_expense_tool(match_description='auto', match_category='Transport', match_date='2026-11-06')",
+    "tool call   -> delete_expense_tool(match_description='auto', match_category='Transport', match_date='2026-11-07')",
+    "tool call   -> update_expense_tool(new_amount=250, new_category='Beverages', match_description='chai', match_category='Food')",
+    "tool call   -> set_budget_tool(category='Food', amount=5000)",
+    "tool call   -> set_budget_tool(amount=1500, category='Food')"
+   ],
+   "seconds": 22.5
+  },
+  {
+   "id": "income_salary",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "got salary 40000 today",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"income\", \"amount\": 40000, \"source\": \"Salary\", \"date\": \"2026-11-07\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "income",
+     "amount": 40000.0,
+     "date": "2026-11-07",
+     "description": "",
+     "source": "Salary"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'got salary 40000 today' -> 'got salary 40000 today'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_income_tool(amount=40000, source='Salary', date='2026-11-07', description='')",
+    "tool call   -> add_income_tool(amount=40000, source='Salary', date='2026-11-07')",
+    "tool call   -> update_expense_tool(match_description='chai', match_category='Food', new_amount=250, new_category='Beverages')",
+    "tool call   -> set_budget_tool(category='Food', amount=5000)",
+    "tool call   -> set_budget_tool(amount=1500, category='Food')"
+   ],
+   "seconds": 23.4
+  },
+  {
+   "id": "income_gift",
+   "group": "actions",
+   "tags": [
+    "regression"
+   ],
+   "question": "mom gave me 2000 yesterday",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"income\", \"amount\": 2000, \"source\": \"Gift\", \"date\": \"2026-11-06\"}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "income",
+     "amount": 2000.0,
+     "date": "2026-11-06",
+     "description": "from mom",
+     "source": "Gift"
+    }
+   ],
+   "tools": [
+    "rewrite     : 'mom gave me 2000 yesterday' -> 'mom gave me 2000 yesterday'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> add_income_tool(description='from mom', amount=2000, source='Gift', date='2026-11-06')",
+    "tool call   -> add_income_tool(amount=2000, source='Gift', date='2026-11-06', description='')",
+    "tool call   -> update_expense_tool(new_category='Beverages', match_description='chai', match_category='Food', new_amount=250)",
+    "tool call   -> set_budget_tool(category='Food', amount=5000)",
+    "tool call   -> set_budget_tool(amount=1500, category='Food')"
+   ],
+   "seconds": 22.2
+  },
+  {
+   "id": "budget_food",
+   "group": "actions",
+   "tags": [],
+   "question": "set my food budget to 5000",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"budget\", \"category\": \"Food\", \"amount\": 5000}]",
+   "got": "Here's what I prepared. Please review it below; nothing changes until you confirm.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "budget",
+     "category": "Food",
+     "amount": 5000.0
+    }
+   ],
+   "tools": [
+    "rewrite     : 'set my food budget to 5000' -> 'set my food budget to 5000'  [first message]",
+    "LOOP STOP   : set_budget_tool called again with the same arguments -> answer written by code",
+    "tool call   -> set_budget_tool(amount=5000, category='Food')"
+   ],
+   "seconds": 12.3
+  }
+ ]
+}

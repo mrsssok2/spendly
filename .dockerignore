@@ -1,0 +1,33 @@
+# Keep the build context small and keep secrets/data out of the image.
+# The image gets code only: the database lives in a volume, settings come from env_file.
+
+# Python environments / caches
+venv/
+.venv/
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Data and secrets (NEVER in the image)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+.env
+
+# Eval output and real receipt photos
+evals/results/
+evals/receipts/
+
+# Editor / VCS / Docker files themselves
+.git/
+.gitignore
+.vscode/
+.idea/
+.claude/
+Dockerfile
+docker-compose.yml
+.dockerignore

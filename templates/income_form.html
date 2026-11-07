@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{# Shared by "add" and "edit" income. When editing, the route passes `income`. #}
+{% set editing = income is not none %}
+
+{% block title %}{{ "Edit Income" if editing else "Add Income" }} · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="form-card">
+    <h1>{{ "✏️ Edit income" if editing else "💵 Add income" }}</h1>
+    <p class="form-subtitle">{{ "Change anything below and save." if editing else "Money that came in: salary, freelance work, gifts, refunds…" }}</p>
+
+    {% if errors %}
+    <div class="alert alert-error">Please fix the highlighted fields below.</div>
+    {% endif %}
+
+    <form method="post"
+          action="{{ url_for('edit_income_page', income_id=income.id) if editing else url_for('add_income_page') }}">
+        <div class="field {% if errors.amount %}has-error{% endif %}">
+            <label for="amount">Amount (₹)</label>
+            <div class="input-prefix">
+                <span aria-hidden="true">₹</span>
+                <input type="number" id="amount" name="amount" value="{{ form.amount }}"
+                       step="0.01" min="0.01" inputmode="decimal" placeholder="0.00" required>
+            </div>
+            {% if errors.amount %}<p class="field-error">{{ errors.amount }}</p>{% endif %}
+        </div>
+
+        <div class="field {% if errors.source %}has-error{% endif %}">
+            <label for="source">Source</label>
+            <select id="source" name="source" required>
+                <option value="" {% if not form.source %}selected{% endif %} disabled>Choose a source</option>
+                {% for source in sources %}
+                <option value="{{ source }}" {% if form.source == source %}selected{% endif %}>{{ source | source_icon }} {{ source }}</option>
+                {% endfor %}
+            </select>
+            {% if errors.source %}<p class="field-error">{{ errors.source }}</p>{% endif %}
+        </div>
+
+        <div class="field {% if errors.date %}has-error{% endif %}">
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date" value="{{ form.date }}" required>
+            {% if errors.date %}<p class="field-error">{{ errors.date }}</p>{% endif %}
+        </div>
+
+        <div class="field {% if errors.description %}has-error{% endif %}">
+            <label for="description">Description <span class="optional">(optional)</span></label>
+            <textarea id="description" name="description" rows="3" maxlength="200"
+                      placeholder="e.g. November salary">{{ form.description }}</textarea>
+            {% if errors.description %}<p class="field-error">{{ errors.description }}</p>{% endif %}
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn">{{ "Save changes" if editing else "Save income" }}</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Spendly · Personal Expense Tracker{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="home-hero">
+    <div class="home-copy">
+        <span class="eyebrow">✨ Your money, finally making sense</span>
+        <h1>Track every rupee.<br><span class="gradient-text">Spend smarter.</span></h1>
+        <p class="lead">Spendly turns your daily spending into clear charts, gentle budget alerts and
+            {{ ai_text.hero }}</p>
+        <div class="home-actions">
+            {% if session.get('user_id') %}
+            <a href="{{ url_for('profile') }}" class="btn">Go to my dashboard →</a>
+            <a href="{{ url_for('analytics') }}" class="btn btn-secondary">See analytics</a>
+            {% else %}
+            <a href="{{ url_for('register') }}" class="btn">Get started, it's free →</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">I have an account</a>
+            {% endif %}
+        </div>
+        <ul class="home-trust">
+            <li>{{ ai_text.trust_privacy }}</li>
+            <li>{{ ai_text.trust_ai }}</li>
+            <li>⚡ Add expenses in seconds</li>
+        </ul>
+    </div>
+
+    {# Decorative illustration (pure SVG + CSS animation) #}
+    <div class="home-art" aria-hidden="true">
+        <div class="art-orbit"></div>
+        <svg class="art-phone" viewBox="0 0 260 420">
+            <defs>
+                <linearGradient id="phone-bg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#4f46e5"/>
+                    <stop offset="1" stop-color="#a855f7"/>
+                </linearGradient>
+                <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#a5b4fc"/>
+                    <stop offset="1" stop-color="#6366f1"/>
+                </linearGradient>
+            </defs>
+            <rect x="6" y="6" width="248" height="408" rx="38" fill="#1d2140"/>
+            <rect x="18" y="18" width="224" height="384" rx="28" fill="#fff"/>
+            <path d="M18 46 a28 28 0 0 1 28 -28 h168 a28 28 0 0 1 28 28 v102 h-224 z" fill="url(#phone-bg)"/>
+            <text x="40" y="62" fill="#e0e7ff" font-size="13" font-family="Segoe UI, sans-serif">This month</text>
+            <text x="40" y="98" fill="#fff" font-size="30" font-weight="700" font-family="Segoe UI, sans-serif">₹12,480</text>
+            <rect x="160" y="74" width="62" height="24" rx="12" fill="rgba(255,255,255,0.2)"/>
+            <text x="191" y="91" fill="#fff" font-size="12" text-anchor="middle" font-family="Segoe UI, sans-serif">▼ 12%</text>
+            <g class="art-bars">
+                <rect class="art-bar" x="44" y="210" width="22" height="80" rx="6" fill="url(#bar)"/>
+                <rect class="art-bar" x="78" y="180" width="22" height="110" rx="6" fill="url(#bar)"/>
+                <rect class="art-bar" x="112" y="225" width="22" height="65" rx="6" fill="url(#bar)"/>
+                <rect class="art-bar" x="146" y="165" width="22" height="125" rx="6" fill="url(#bar)"/>
+                <rect class="art-bar" x="180" y="195" width="22" height="95" rx="6" fill="url(#bar)"/>
+            </g>
+            <rect x="36" y="312" width="188" height="34" rx="10" fill="#f5f6fb"/>
+            <text x="50" y="334" font-size="13" font-family="Segoe UI, sans-serif" fill="#1d2140">🍜 Food</text>
+            <text x="210" y="334" font-size="13" text-anchor="end" font-family="Segoe UI, sans-serif" fill="#4f46e5" font-weight="700">₹3,240</text>
+            <rect x="36" y="354" width="188" height="34" rx="10" fill="#f5f6fb"/>
+            <text x="50" y="376" font-size="13" font-family="Segoe UI, sans-serif" fill="#1d2140">🚕 Transport</text>
+            <text x="210" y="376" font-size="13" text-anchor="end" font-family="Segoe UI, sans-serif" fill="#4f46e5" font-weight="700">₹1,860</text>
+        </svg>
+        <div class="art-chip chip-a">🍜 <strong>₹250</strong> lunch</div>
+        <div class="art-chip chip-b">🎯 Budget <strong>68%</strong></div>
+        <div class="art-chip chip-c">🤖 “spent 120 on chai”</div>
+        <div class="art-coin">₹</div>
+    </div>
+</section>
+
+<section class="home-features" aria-label="Features">
+    <article class="feature">
+        <div class="feature-icon">🧾</div>
+        <h2>Effortless tracking</h2>
+        <p>Add, edit and filter expenses by date. Every rupee lands in the right category.</p>
+    </article>
+    <article class="feature">
+        <div class="feature-icon">🤖</div>
+        <h2>AI assistant</h2>
+        <p>Type “spent 250 on auto and 120 on chai”. Review the preview, click Confirm, done.</p>
+    </article>
+    <article class="feature">
+        <div class="feature-icon">🎯</div>
+        <h2>Budgets &amp; alerts</h2>
+        <p>Set monthly limits and get a gentle nudge at 80% before things get out of hand.</p>
+    </article>
+    <article class="feature">
+        <div class="feature-icon">📈</div>
+        <h2>Charts &amp; insights</h2>
+        <p>See trends by month, category and day, plus saving tips built from your real numbers.</p>
+    </article>
+</section>
+{% endblock %}

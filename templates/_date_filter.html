@@ -1,0 +1,38 @@
+{# Shared date filter panel (profile and analytics pages).
+   Needs: filter_endpoint (route name), filters, date_from, date_to, filter_error,
+          is_filtered, active_from, active_to. Not a page, so it doesn't extend base.html. #}
+<section class="panel filter-panel" aria-label="Date filter">
+    <div class="quick-filters">
+        {% for f in filters %}
+        <a href="{{ url_for(filter_endpoint, date_from=f.date_from, date_to=f.date_to) if f.date_from else url_for(filter_endpoint) }}"
+           class="chip {% if f.active %}chip-active{% endif %}"
+           {% if f.active %}aria-current="true"{% endif %}>{{ f.label }}</a>
+        {% endfor %}
+    </div>
+
+    <form method="get" action="{{ url_for(filter_endpoint) }}" class="filter-form">
+        <div class="filter-field">
+            <label for="date_from">From</label>
+            <input type="date" id="date_from" name="date_from" value="{{ date_from }}">
+        </div>
+        <div class="filter-field">
+            <label for="date_to">To</label>
+            <input type="date" id="date_to" name="date_to" value="{{ date_to }}">
+        </div>
+        <div class="filter-buttons">
+            <button type="submit" class="btn btn-sm">Apply</button>
+            <a href="{{ url_for(filter_endpoint) }}" class="btn btn-sm btn-secondary">Clear</a>
+        </div>
+    </form>
+
+    {% if filter_error %}
+    <div class="alert alert-error filter-error">{{ filter_error }}</div>
+    {% elif is_filtered %}
+    <p class="filter-summary">
+        Showing
+        {% if active_from and active_to %}{{ active_from | nice_date }} – {{ active_to | nice_date }}
+        {% elif active_from %}from {{ active_from | nice_date }} onwards
+        {% else %}up to {{ active_to | nice_date }}{% endif %}
+    </p>
+    {% endif %}
+</section>

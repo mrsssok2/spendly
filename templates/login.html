@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Log in · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-layout">
+{% with auth_heading = "Welcome back! Your money missed you." %}{% include "_auth_art.html" %}{% endwith %}
+<section class="form-card">
+    <h1>Log in</h1>
+    <p class="form-subtitle">Good to see you again 👋</p>
+
+    {% if error %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('login') }}">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ email }}" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="btn">Log in</button>
+    </form>
+
+    <p class="form-footer">
+        New to Spendly? <a href="{{ url_for('register') }}">Create an account</a>
+    </p>
+</section>
+</div>
+{% endblock %}

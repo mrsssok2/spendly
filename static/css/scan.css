@@ -1,0 +1,227 @@
+/* Receipt scanning page. Uses the theme tokens from style.css (works in dark mode too). */
+
+.scan-head {
+    margin-bottom: 1.5rem;
+}
+
+.scan-head h1 {
+    font-size: 1.9rem;
+    margin-bottom: 0.3rem;
+}
+
+/* ---------- Upload ---------- */
+.scan-upload {
+    max-width: 620px;
+}
+
+.drop-zone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 2.5rem 1.5rem;
+    border: 2px dashed var(--border-hover);
+    border-radius: var(--radius);
+    background: var(--surface);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease);
+}
+
+.drop-zone:hover,
+.drop-zone.dragging {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    transform: translateY(-2px);
+}
+
+.drop-zone.has-error {
+    border-color: var(--danger);
+}
+
+.drop-zone input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.drop-zone:focus-within {
+    outline: 3px solid rgba(79, 70, 229, 0.35);
+    outline-offset: 3px;
+}
+
+.drop-icon {
+    font-size: 3rem;
+    animation: float-y 4s ease-in-out infinite;
+}
+
+.drop-title {
+    font-weight: 600;
+}
+
+.drop-hint,
+.drop-name {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.drop-preview {
+    max-height: 220px;
+    max-width: 100%;
+    margin-top: 0.8rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.scan-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.1rem;
+}
+
+.scan-loading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.scan-loading[hidden] {
+    display: none;
+}
+
+/* A "scanner" line sweeping over a little receipt */
+.scan-loader {
+    position: relative;
+    width: 42px;
+    height: 54px;
+    flex-shrink: 0;
+    border-radius: 6px;
+    background: repeating-linear-gradient(var(--surface-3) 0 6px, var(--surface-2) 6px 10px);
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.scan-loader span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient);
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.8);
+    animation: sweep 1.3s ease-in-out infinite alternate;
+}
+
+@keyframes sweep {
+    from { top: 2px; }
+    to { top: calc(100% - 5px); }
+}
+
+/* ---------- Review ---------- */
+.scan-review {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.scan-image-panel {
+    position: sticky;
+    top: 80px;
+    margin-bottom: 0;
+}
+
+.image-toggle {
+    display: inline-flex;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--surface-3);
+    margin-bottom: 1rem;
+}
+
+.toggle-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.4rem 0.95rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.toggle-btn.active {
+    background: var(--surface);
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.receipt-frame {
+    border-radius: 12px;
+    background: var(--surface-2);
+    border: 1px solid var(--divider);
+    padding: 0.75rem;
+    display: flex;
+    justify-content: center;
+}
+
+.receipt-img {
+    max-width: 100%;
+    max-height: 560px;
+    object-fit: contain;
+    border-radius: 8px;
+    animation: rise 0.4s var(--ease) both;
+}
+
+.image-info {
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+}
+
+.scan-form-card {
+    max-width: none;
+    margin: 0;
+}
+
+.scan-form-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.detected-type {
+    display: inline-block;
+    margin: -0.6rem 0 1.1rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--primary-soft);
+    color: var(--text);
+    font-size: 0.88rem;
+}
+
+.detected-type strong {
+    color: var(--primary);
+}
+
+.scan-note {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 820px) {
+    .scan-review {
+        grid-template-columns: 1fr;
+    }
+
+    .scan-image-panel {
+        position: static;
+    }
+}

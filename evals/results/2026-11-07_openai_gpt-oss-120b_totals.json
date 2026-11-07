@@ -1,0 +1,353 @@
+{
+ "run": {
+  "date": "2026-11-07T18:50:09",
+  "today": "2026-11-07",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "vision_model": "qwen/qwen3.8-27b",
+  "tokens": 142584,
+  "not_run": 0,
+  "judge_model": null,
+  "cases": 15,
+  "seconds": 149.1,
+  "selection": "totals",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 15,
+   "total": 15,
+   "percent": 100.0
+  },
+  "by_group": {
+   "totals": {
+    "passed": 15,
+    "total": 15,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "regression": {
+    "passed": 4,
+    "total": 4,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "total_none",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend in total?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=10235",
+   "got": "You spent ₹10,235 in total across 20 expenses.\nBy category: Bills ₹4,100, Shopping ₹1,700, Food ₹1,330, Transport ₹1,240, Health ₹1,215, Entertainment ₹650",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend in total?' -> 'how much did I spend in total?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='')"
+   ],
+   "seconds": 17.2,
+   "tokens": 9513
+  },
+  {
+   "id": "total_today",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "how much did I spend today?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=360",
+   "got": "You spent ₹360 today across 2 expenses.\nBy category: Transport ₹280, Food ₹80",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend today?' -> 'how much did I spend today?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='today')"
+   ],
+   "seconds": 4.7,
+   "tokens": 9476
+  },
+  {
+   "id": "total_yesterday",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend yesterday?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=545",
+   "got": "You spent ₹545 yesterday across 2 expenses.\nBy category: Food ₹450, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend yesterday?' -> 'how much did I spend yesterday?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='yesterday')"
+   ],
+   "seconds": 5.0,
+   "tokens": 9479
+  },
+  {
+   "id": "total_day_before_yesterday",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "how much did I spend day before yesterday?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=1260",
+   "got": "You spent ₹1,260 day before yesterday across 2 expenses.\nBy category: Bills ₹1,200, Transport ₹60",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend day before yesterday?' -> 'how much did I spend day before yesterday?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='day before yesterday')"
+   ],
+   "seconds": 4.3,
+   "tokens": 9496
+  },
+  {
+   "id": "total_this_week",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend this week?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "You spent ₹3,465 this week across 8 expenses.\nBy category: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend this week?' -> 'how much did I spend this week?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='this week')"
+   ],
+   "seconds": 4.1,
+   "tokens": 9507
+  },
+  {
+   "id": "total_last_week",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend last week?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=1050",
+   "got": "You spent ₹1,050 last week across 3 expenses.\nBy category: Health ₹520, Transport ₹280, Food ₹250",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend last week?' -> 'how much did I spend last week?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='last week')"
+   ],
+   "seconds": 4.3,
+   "tokens": 9491
+  },
+  {
+   "id": "total_this_month",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "You spent ₹3,465 this month across 8 expenses.\nBy category: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend this month?' -> 'how much did I spend this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='this month')"
+   ],
+   "seconds": 5.0,
+   "tokens": 9507
+  },
+  {
+   "id": "total_last_month",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend last month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=4920",
+   "got": "You spent ₹4,920 last month across 9 expenses.\nBy category: Bills ₹2,000, Transport ₹900, Food ₹800, Shopping ₹700, Health ₹520",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend last month?' -> 'how much did I spend last month?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='last month')"
+   ],
+   "seconds": 3.3,
+   "tokens": 9501
+  },
+  {
+   "id": "total_named_month",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend in November?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "You spent ₹3,465 in November 2026 across 8 expenses.\nBy category: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend in November?' -> 'how much did I spend in November?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='November')"
+   ],
+   "seconds": 4.8,
+   "tokens": 9507
+  },
+  {
+   "id": "total_named_month_year",
+   "group": "totals",
+   "tags": [],
+   "question": "total spending in October 2026",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=4920",
+   "got": "You spent ₹4,920 in October 2026 across 9 expenses.\nBy category: Bills ₹2,000, Transport ₹900, Food ₹800, Shopping ₹700, Health ₹520",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'total spending in October 2026' -> 'total spending in October 2026'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='October 2026')"
+   ],
+   "seconds": 4.3,
+   "tokens": 9511
+  },
+  {
+   "id": "total_food_this_month",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend on food this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=530",
+   "got": "You spent ₹530 on Food this month across 2 expenses.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend on food this month?' -> 'how much did I spend on food this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='Food', period='this month')"
+   ],
+   "seconds": 5.7,
+   "tokens": 9487
+  },
+  {
+   "id": "total_transport_last_month",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "transport spending in October 2026",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=900",
+   "got": "You spent ₹900 on Transport in October 2026 across 3 expenses.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'transport spending in October 2026' -> 'transport spending in October 2026'  [first message]",
+    "tool call   -> get_spending_summary(category='Transport', period='October 2026')"
+   ],
+   "seconds": 4.0,
+   "tokens": 9510
+  },
+  {
+   "id": "total_no_question_word",
+   "group": "totals",
+   "tags": [
+    "regression"
+   ],
+   "question": "my spending today",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=360",
+   "got": "You spent ₹360 today across 2 expenses.\nBy category: Transport ₹280, Food ₹80",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'my spending today' -> 'my spending today'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='today')"
+   ],
+   "seconds": 5.0,
+   "tokens": 9496
+  },
+  {
+   "id": "total_bills_all_time",
+   "group": "totals",
+   "tags": [],
+   "question": "how much have I spent on bills?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=4100",
+   "got": "You spent ₹4,100 on Bills in total across 3 expenses.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much have I spent on bills?' -> 'how much have I spent on bills?'  [first message]",
+    "tool call   -> get_spending_summary(category='Bills', period='')"
+   ],
+   "seconds": 8.9,
+   "tokens": 9479
+  },
+  {
+   "id": "total_weekend",
+   "group": "totals",
+   "tags": [],
+   "question": "how much did I spend on weekends?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=4330",
+   "got": "On weekends you spent ₹4,330.00.",
+   "problems": [],
+   "sql": "SELECT CASE WHEN strftime('%w', date) IN ('0','6') THEN 'weekend' ELSE 'weekday' END AS period, SUM(amount) AS total FROM my_expenses GROUP BY period;",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how much did I spend on weekends?' -> 'how much did I spend on weekends?'  [first message]",
+    "sql ALLOWED : 2 rows  (7 ms)  period=in total  SELECT CASE WHEN strftime('%w', date) IN ('0','6') THEN 'weekend' ELSE 'weekday' END AS period, SUM(amount) AS total FROM my_expenses GROUP BY period;",
+    "tool call   -> run_sql_query(measure='', period='', sql=\"SELECT CASE WHEN strftime('%w', date) IN ('0','6') THEN 'weekend' ELSE 'weekday' END AS period, SUM(amount) AS total FROM my_expenses GROUP BY period;\")",
+    "sql reply   : checked"
+   ],
+   "seconds": 6.1,
+   "tokens": 9624
+  }
+ ]
+}

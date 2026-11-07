@@ -1,0 +1,16 @@
+flask
+werkzeug
+python-dotenv
+gunicorn
+pytest
+pytest-flask
+langchain
+langchain-core
+langchain-ollama
+langchain-groq
+opencv-python-headless
+Pillow
+pymupdf
+faster-whisper
+mcp>=2.3,<3
+scikit-learn

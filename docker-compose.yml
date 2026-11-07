@@ -1,0 +1,40 @@
+# Phase 1: Spendly in Docker, Ollama on the Windows host.
+#   docker compose up -d --build     → http://localhost:5001  (health: /health)
+
+services:
+  spendly:
+    build: .
+    image: spendly:latest
+    container_name: spendly
+    ports:
+      - "5001:5001"
+    env_file:
+      # Every setting from .env reaches the app, including LLM_PROVIDER and GROQ_API_KEY /
+      # GROQ_CHAT_MODEL / GROQ_VISION_MODEL (LLM_PROVIDER=groq: no Ollama needed). The key stays
+      # out of the image (.dockerignore) and out of this file.
+      - .env
+    environment:
+      # Only used when LLM_PROVIDER=ollama. Inside the container "localhost" is the container
+      # itself; host.docker.internal is Docker Desktop's name for the Windows machine (Ollama: 11434).
+      OLLAMA_URL: http://host.docker.internal:11434
+      SPENDLY_DB_PATH: /app/data/spendly.db
+      HF_HOME: /models/huggingface
+    extra_hosts:
+      # Docker Desktop defines this name already; this line makes it work on Linux too.
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - spendly-data:/app/data            # SQLite database: survives restarts and rebuilds
+      - whisper-cache:/models             # Whisper model (~480 MB), downloaded only once
+    healthcheck:
+      # The slim image has no curl, so use Python. /health is 200 when app + database are OK
+      # (the AI provider being down is reported in the JSON but doesn't make the container unhealthy).
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:5001/health', timeout=5).status == 200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  spendly-data:
+  whisper-cache:

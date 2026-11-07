@@ -1,0 +1,340 @@
+/* Shared styles for form pages (login, register, add/edit expense). */
+
+.form-card {
+    max-width: 460px;
+    width: 100%;
+    margin: 0 auto;
+    background: var(--surface);
+    padding: 2.2rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.form-card h1 {
+    font-size: 1.7rem;
+    margin-bottom: 0.3rem;
+}
+
+.form-subtitle {
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+}
+
+.form-card form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-card label {
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.35rem;
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    padding: 0.72rem 0.9rem;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: var(--input-bg);
+    color: var(--text);
+    margin-bottom: 1.05rem;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.form-card textarea {
+    resize: vertical;
+}
+
+.form-card input:hover,
+.form-card select:hover,
+.form-card textarea:hover {
+    border-color: var(--border-hover);
+}
+
+.form-card input:focus,
+.form-card select:focus,
+.form-card textarea:focus {
+    outline: none;
+    background: var(--input-bg-focus);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.form-card .btn {
+    margin-top: 0.4rem;
+    padding: 0.85rem 1.3rem;
+}
+
+/* ₹ sign inside the amount box */
+.input-prefix {
+    position: relative;
+}
+
+.input-prefix span {
+    position: absolute;
+    left: 0.95rem;
+    top: 0.72rem;
+    color: var(--muted);
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.input-prefix input {
+    padding-left: 2rem;
+}
+
+/* ---------- Field wrappers & per-field errors ---------- */
+.field {
+    display: flex;
+    flex-direction: column;
+}
+
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea {
+    border-color: var(--danger);
+    background: var(--danger-soft);
+    margin-bottom: 0.3rem;
+    animation: shake 0.4s ease;
+}
+
+.field-error {
+    color: var(--danger);
+    font-size: 0.88rem;
+    margin-bottom: 1rem;
+}
+
+@keyframes shake {
+    20%, 60% { transform: translateX(-4px); }
+    40%, 80% { transform: translateX(4px); }
+}
+
+.optional {
+    font-weight: 400;
+    color: var(--muted);
+}
+
+/* ---------- Buttons row ---------- */
+.form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.form-actions .btn {
+    flex: 1;
+    margin-top: 0;
+}
+
+.form-footer {
+    margin-top: 1.4rem;
+    text-align: center;
+    color: var(--muted);
+}
+
+.form-footer a {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ---------- Login / register: split layout ---------- */
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 920px;
+    margin: 1rem auto 0;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--surface);
+}
+
+.auth-layout .form-card {
+    max-width: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 2.6rem;
+    align-self: center;
+}
+
+.auth-art {
+    position: relative;
+    background: var(--gradient);
+    color: #fff;
+    padding: 2.6rem;
+    overflow: hidden;
+}
+
+.auth-art::before,
+.auth-art::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.auth-art::before {
+    width: 260px;
+    height: 260px;
+    top: -90px;
+    right: -80px;
+    animation: drift 9s ease-in-out infinite;
+}
+
+.auth-art::after {
+    width: 180px;
+    height: 180px;
+    bottom: -60px;
+    left: -50px;
+    animation: drift 11s ease-in-out infinite reverse;
+}
+
+.auth-art-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-art-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    opacity: 0.8;
+    margin-bottom: 0.6rem;
+}
+
+.auth-art h2 {
+    font-size: 1.7rem;
+    margin-bottom: 1.4rem;
+}
+
+.auth-points {
+    list-style: none;
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: 2rem;
+}
+
+.auth-points li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 500;
+}
+
+.auth-points span {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-card-stack {
+    position: relative;
+    height: 120px;
+}
+
+.auth-mini-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 220px;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1d2140;   /* always a light card, in both themes */
+    box-shadow: 0 16px 30px rgba(30, 20, 90, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    animation: float-card 6s ease-in-out infinite;
+}
+
+.auth-mini-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.auth-mini-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.auth-mini-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: #ebe9fe;
+    overflow: hidden;
+}
+
+.auth-mini-bar span {
+    display: block;
+    height: 100%;
+    background: var(--gradient);
+    border-radius: 3px;
+    transform-origin: left;
+    animation: grow-x 1.4s var(--ease) 0.4s both;
+}
+
+.auth-mini-card-2 {
+    left: 150px;
+    top: 70px;
+    width: auto;
+    flex-direction: row;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    animation-delay: -3s;
+}
+
+.auth-mini-card-2 strong {
+    color: var(--primary);
+}
+
+@keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-18px, 14px); }
+}
+
+@keyframes float-card {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+@keyframes grow-x {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+}
+
+@media (max-width: 760px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-art {
+        padding: 1.8rem;
+    }
+
+    .auth-card-stack,
+    .auth-points {
+        display: none;
+    }
+
+    .auth-art h2 {
+        margin-bottom: 0;
+        font-size: 1.35rem;
+    }
+
+    .auth-layout .form-card {
+        padding: 1.8rem;
+    }
+}

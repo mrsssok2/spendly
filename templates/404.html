@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Not Found · Spendly{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <p class="hero-emoji" aria-hidden="true">🧭</p>
+    <h1><span class="gradient-text">404</span> · Page not found</h1>
+    <p>We couldn't find what you were looking for.</p>
+    <p class="hero-action">
+        <a href="{{ url_for('profile') if session.get('user_id') else url_for('index') }}" class="btn">
+            {{ "Back to my profile" if session.get('user_id') else "Go home" }}
+        </a>
+    </p>
+</section>
+{% endblock %}

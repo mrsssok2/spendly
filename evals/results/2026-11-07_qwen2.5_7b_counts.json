@@ -1,0 +1,320 @@
+{
+ "run": {
+  "date": "2026-11-07T19:03:41",
+  "today": "2026-11-07",
+  "provider": "ollama",
+  "model": "qwen2.5:7b",
+  "vision_model": "gemma3:4b",
+  "tokens": null,
+  "not_run": 0,
+  "judge_model": null,
+  "cases": 9,
+  "seconds": 200.8,
+  "selection": "counts",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 7,
+   "total": 9,
+   "percent": 77.8
+  },
+  "by_group": {
+   "counts": {
+    "passed": 7,
+    "total": 9,
+    "percent": 77.8
+   }
+  },
+  "by_tag": {
+   "edge": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   },
+   "regression": {
+    "passed": 5,
+    "total": 6,
+    "percent": 83.3
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [
+  {
+   "id": "count_all",
+   "group": "counts",
+   "question": "how many expenses do I have?",
+   "turns": [],
+   "expected": "",
+   "got": "AI assistant unavailable",
+   "problems": [
+    "RuntimeError: HTTP 503: {'detail': 'Ollama returned an error: llama-server process has terminated: exit status 0xc0000409: The system detected an overrun of a stack-based buffer in this application. This overrun could potentially allow a malicious user to gain control of this application.: CUDA error: shared object initialization failed', 'error': 'AI assistant unavailable'}"
+   ],
+   "sql": null,
+   "tools": [
+    "rewrite     : 'how many expenses do I have?' -> 'how many expenses do I have?'  [first message]"
+   ],
+   "got_previews": null
+  },
+  {
+   "id": "count_between",
+   "group": "counts",
+   "question": "how many expenses between 100 and 500?",
+   "turns": [],
+   "expected": "count=10",
+   "got": "Number of matching expenses: 9.",
+   "problems": [
+    "missing count 10"
+   ],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500",
+   "tools": [
+    "rewrite     : 'how many expenses between 100 and 500?' -> 'how many expenses between 100 and 500?'  [first message]",
+    "sql ALLOWED : 1 rows  (5 ms)  period=in total  SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql='SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500', period='', measure='')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "got_previews": null
+  }
+ ],
+ "cases": [
+  {
+   "id": "count_all",
+   "group": "counts",
+   "tags": [],
+   "question": "how many expenses do I have?",
+   "turns": [],
+   "status": "error",
+   "expected": "",
+   "got": "AI assistant unavailable",
+   "problems": [
+    "RuntimeError: HTTP 503: {'detail': 'Ollama returned an error: llama-server process has terminated: exit status 0xc0000409: The system detected an overrun of a stack-based buffer in this application. This overrun could potentially allow a malicious user to gain control of this application.: CUDA error: shared object initialization failed', 'error': 'AI assistant unavailable'}"
+   ],
+   "sql": null,
+   "http": 503,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses do I have?' -> 'how many expenses do I have?'  [first message]"
+   ],
+   "seconds": 39.0
+  },
+  {
+   "id": "count_this_week",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many expenses this week?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=8",
+   "got": "Number of expenses this week: 8.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, 2026-11-02 to 2026-11-08",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses this week?' -> 'how many expenses this week?'  [first message]",
+    "sql TEMPLATE: count from the user's words  (9 ms)  period=this week -> 'Number of expenses this week: 8.'",
+    "LOOP STOP   : get_spending_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql=\"SELECT COUNT(*) FROM my_expenses WHERE date BETWEEN '2026-11-05' AND '2026-11-11'\", period='this week', measure='')",
+    "tool call   -> get_spending_summary(period='this week', date_from='', date_to='')",
+    "tool call   -> get_spending_summary(period='this week')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 35.1
+  },
+  {
+   "id": "count_food_this_month",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many food expenses this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=2",
+   "got": "Number of Food expenses this month: 2.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, 2026-11-01 to 2026-11-30, category = 'Food'",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many food expenses this month?' -> 'how many food expenses this month?'  [first message]",
+    "sql TEMPLATE: count category=Food from the user's words  (2 ms)  period=this month -> 'Number of Food expenses this month: 2.'",
+    "LOOP STOP   : get_spending_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql='', period='this month', measure='count')",
+    "tool call   -> get_spending_summary(period='this month', date_from='', date_to='')",
+    "tool call   -> get_spending_summary(period='this month')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 15.9
+  },
+  {
+   "id": "count_transport",
+   "group": "counts",
+   "tags": [],
+   "question": "how many transport expenses?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=5",
+   "got": "Number of Transport expenses: 5.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, all time, category = 'Transport'",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many transport expenses?' -> 'how many transport expenses?'  [first message]",
+    "sql TEMPLATE: count category=Transport from the user's words  (3 ms)  period=in total -> 'Number of Transport expenses: 5.'",
+    "tool call   -> run_sql_query(measure='', sql=\"SELECT COUNT(*) FROM my_expenses WHERE category = 'Transport'\", period='')",
+    "tool call   -> get_spending_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 21.4
+  },
+  {
+   "id": "count_above_280",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses above 280?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=12",
+   "got": "Number of matching expenses: 12.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount > 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses above 280?' -> 'how many expenses above 280?'  [first message]",
+    "sql ALLOWED : 1 rows  (2 ms)  period=in total  SELECT COUNT(*) FROM my_expenses WHERE amount > 280",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql='SELECT COUNT(*) FROM my_expenses WHERE amount > 280', period='', measure='')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "seconds": 14.7
+  },
+  {
+   "id": "count_280_or_more",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses of 280 or more?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=14",
+   "got": "Number of matching expenses: 14.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount >= 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses of 280 or more?' -> 'how many expenses of 280 or more?'  [first message]",
+    "sql ALLOWED : 1 rows  (4 ms)  period=in total  SELECT COUNT(*) FROM my_expenses WHERE amount >= 280",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(period='', measure='', sql='SELECT COUNT(*) FROM my_expenses WHERE amount >= 280')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "seconds": 12.6
+  },
+  {
+   "id": "count_between",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many expenses between 100 and 500?",
+   "turns": [],
+   "status": "fail",
+   "expected": "count=10",
+   "got": "Number of matching expenses: 9.",
+   "problems": [
+    "missing count 10"
+   ],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses between 100 and 500?' -> 'how many expenses between 100 and 500?'  [first message]",
+    "sql ALLOWED : 1 rows  (5 ms)  period=in total  SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql='SELECT COUNT(*) FROM my_expenses WHERE amount > 100 AND amount < 500', period='', measure='')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "seconds": 16.9
+  },
+  {
+   "id": "count_exact",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses of exactly 280?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=2",
+   "got": "Number of matching expenses: 2.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount = 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses of exactly 280?' -> 'how many expenses of exactly 280?'  [first message]",
+    "sql ALLOWED : 1 rows  (4 ms)  period=in total  SELECT COUNT(*) FROM my_expenses WHERE amount = 280",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql='SELECT COUNT(*) FROM my_expenses WHERE amount = 280', period='', measure='')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "seconds": 14.4
+  },
+  {
+   "id": "count_below_100_last_month",
+   "group": "counts",
+   "tags": [],
+   "question": "how many expenses below 100 last month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=0",
+   "got": "Number of matching expenses (last month): 0.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) FROM my_expenses WHERE amount < 100\n-- period from your question: last month (2026-10-01 to 2026-10-31)",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses below 100 last month?' -> 'how many expenses below 100 last month?'  [first message]",
+    "sql BLOCKED : dates or 'now' in the SQL: remove every date condition, the tables already contain only the period's rows; put the time phrase in period  (0 ms)  SELECT COUNT(*) FROM my_expenses WHERE amount < 100 AND date BETWEEN '2026-10-01' AND '2026-10-31'",
+    "sql ALLOWED : 1 rows  (3 ms)  period=last month  SELECT COUNT(*) FROM my_expenses WHERE amount < 100",
+    "LOOP STOP   : get_savings_summary called again with the same arguments -> answer written by code",
+    "tool call   -> run_sql_query(sql=\"SELECT COUNT(*) FROM my_expenses WHERE amount < 100 AND date BETWEEN '2026-10-01' AND '2026-10-31'\", period='last month')",
+    "tool call   -> run_sql_query(sql='SELECT COUNT(*) FROM my_expenses WHERE amount < 100', period='last month', measure='')",
+    "tool call   -> get_savings_summary(period='last month', date_from='', date_to='')",
+    "tool call   -> get_savings_summary(period='', date_from='', date_to='')",
+    "fixed-tool answer dropped: the SQL result answers this question",
+    "sql reply   : reply unusable"
+   ],
+   "seconds": 23.6
+  }
+ ]
+}

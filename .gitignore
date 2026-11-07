@@ -1,0 +1,10 @@
+# Secrets / per-machine settings (SPENDLY_USER_EMAIL for the MCP server)
+.env
+
+# Python
+venv/
+__pycache__/
+.pytest_cache/
+
+# Eval receipt images are real bills: keep them out of git
+evals/receipts/

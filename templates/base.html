@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4f46e5">
+    <title>{% block title %}Spendly{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='11' fill='%234f46e5'/%3E%3Ctext x='20' y='28' font-size='22' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'%3E%E2%82%B9%3C/text%3E%3C/svg%3E">
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% set endpoint = request.endpoint %}
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="brand" aria-label="Spendly home">
+            <svg class="brand-logo" viewBox="0 0 40 40" aria-hidden="true">
+                <defs>
+                    <linearGradient id="logo-gradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#4f46e5"/>
+                        <stop offset="1" stop-color="#a855f7"/>
+                    </linearGradient>
+                </defs>
+                <rect width="40" height="40" rx="11" fill="url(#logo-gradient)"/>
+                <path d="M13 12h14M13 17h14M13 12c8 0 8 10 0 10l11 8" fill="none" stroke="#fff"
+                      stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="brand-text">Spendly</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('index') }}" class="{{ 'active' if endpoint == 'index' }}"><span class="nav-icon" aria-hidden="true">🏠</span>Home</a></li>
+            <li>
+                <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark mode" title="Light / dark mode">
+                    <span class="theme-icon theme-icon-moon" aria-hidden="true">🌙</span>
+                    <span class="theme-icon theme-icon-sun" aria-hidden="true">☀️</span>
+                </button>
+            </li>
+            {% if session.get('user_id') %}
+            <li><a href="{{ url_for('analytics') }}" class="{{ 'active' if endpoint == 'analytics' }}"><span class="nav-icon" aria-hidden="true">📊</span>Analytics</a></li>
+            <li><a href="{{ url_for('profile') }}" class="nav-greeting {{ 'active' if endpoint == 'profile' }}"><span class="nav-avatar" aria-hidden="true">{{ (session.get('user_name') or '?')[0] | upper }}</span>Hi, {{ session.get('user_name') }}</a></li>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+            <li><a href="{{ url_for('login') }}" class="{{ 'active' if endpoint == 'login' }}">Login</a></li>
+            <li><a href="{{ url_for('register') }}" class="nav-cta">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Spendly · Track every rupee <span class="footer-heart" aria-hidden="true">💜</span></p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

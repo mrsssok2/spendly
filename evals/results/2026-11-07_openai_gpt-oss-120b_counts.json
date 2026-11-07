@@ -1,0 +1,265 @@
+{
+ "run": {
+  "date": "2026-11-07T18:58:53",
+  "today": "2026-11-07",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "vision_model": "qwen/qwen3.8-27b",
+  "tokens": 85747,
+  "not_run": 0,
+  "judge_model": null,
+  "cases": 9,
+  "seconds": 71.1,
+  "selection": "counts",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 9,
+   "total": 9,
+   "percent": 100.0
+  },
+  "by_group": {
+   "counts": {
+    "passed": 9,
+    "total": 9,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "edge": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   },
+   "regression": {
+    "passed": 6,
+    "total": 6,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "count_all",
+   "group": "counts",
+   "tags": [],
+   "question": "how many expenses do I have?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=20",
+   "got": "Number of expenses: 20.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, all time",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses do I have?' -> 'how many expenses do I have?'  [first message]",
+    "tool call   -> get_spending_summary(period='')",
+    "code fallback -> run_sql_query(measure='count'): the AI didn't use run_sql_query",
+    "sql TEMPLATE: count from the user's words  (16 ms)  period=in total -> 'Number of expenses: 20.'",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 5.8,
+   "tokens": 9496
+  },
+  {
+   "id": "count_this_week",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many expenses this week?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=8",
+   "got": "Number of expenses this week: 8.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, 2026-11-02 to 2026-11-08",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses this week?' -> 'how many expenses this week?'  [first message]",
+    "tool call   -> get_spending_summary(period='this week')",
+    "code fallback -> run_sql_query(measure='count'): the AI didn't use run_sql_query",
+    "sql TEMPLATE: count from the user's words  (3 ms)  period=this week -> 'Number of expenses this week: 8.'",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 6.6,
+   "tokens": 9504
+  },
+  {
+   "id": "count_food_this_month",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many food expenses this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=2",
+   "got": "Number of Food expenses this month: 2.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, 2026-11-01 to 2026-11-30, category = 'Food'",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many food expenses this month?' -> 'how many food expenses this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='Food', period='this month')",
+    "code fallback -> run_sql_query(measure='count'): the AI didn't use run_sql_query",
+    "sql TEMPLATE: count category=Food from the user's words  (1 ms)  period=this month -> 'Number of Food expenses this month: 2.'",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 3.1,
+   "tokens": 9487
+  },
+  {
+   "id": "count_transport",
+   "group": "counts",
+   "tags": [],
+   "question": "how many transport expenses?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=5",
+   "got": "Number of Transport expenses: 5.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'count' (fixed query; the AI only picked it)\n-- your expenses only, all time, category = 'Transport'",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many transport expenses?' -> 'how many transport expenses?'  [first message]",
+    "tool call   -> get_spending_summary(category='Transport', period='')",
+    "code fallback -> run_sql_query(measure='count'): the AI didn't use run_sql_query",
+    "sql TEMPLATE: count category=Transport from the user's words  (2 ms)  period=in total -> 'Number of Transport expenses: 5.'",
+    "sql reply   : template count: answer written by code"
+   ],
+   "seconds": 1.9,
+   "tokens": 9471
+  },
+  {
+   "id": "count_above_280",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses above 280?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=12",
+   "got": "There are 12 expenses above ₹280.00.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) as count FROM my_expenses WHERE amount > 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses above 280?' -> 'how many expenses above 280?'  [first message]",
+    "sql ALLOWED : 1 rows  (2 ms)  period=in total  SELECT COUNT(*) as count FROM my_expenses WHERE amount > 280",
+    "tool call   -> run_sql_query(measure='', period='', sql='SELECT COUNT(*) as count FROM my_expenses WHERE amount > 280')",
+    "sql reply   : checked"
+   ],
+   "seconds": 2.2,
+   "tokens": 9534
+  },
+  {
+   "id": "count_280_or_more",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses of 280 or more?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=14",
+   "got": "There are 14 expenses of ₹280.00 or more.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) as count FROM my_expenses WHERE amount >= 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses of 280 or more?' -> 'how many expenses of 280 or more?'  [first message]",
+    "sql ALLOWED : 1 rows  (3 ms)  period=in total  SELECT COUNT(*) as count FROM my_expenses WHERE amount >= 280",
+    "tool call   -> run_sql_query(measure='', period='', sql='SELECT COUNT(*) as count FROM my_expenses WHERE amount >= 280')",
+    "sql reply   : checked"
+   ],
+   "seconds": 2.7,
+   "tokens": 9557
+  },
+  {
+   "id": "count_between",
+   "group": "counts",
+   "tags": [
+    "regression"
+   ],
+   "question": "how many expenses between 100 and 500?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=10",
+   "got": "There are 10 expenses with amounts between ₹100.00 and ₹500.00.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS count FROM my_expenses WHERE amount BETWEEN 100 AND 500;",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses between 100 and 500?' -> 'how many expenses between 100 and 500?'  [first message]",
+    "sql ALLOWED : 1 rows  (3 ms)  period=in total  SELECT COUNT(*) AS count FROM my_expenses WHERE amount BETWEEN 100 AND 500;",
+    "tool call   -> run_sql_query(measure='', period='', sql='SELECT COUNT(*) AS count FROM my_expenses WHERE amount BETWEEN 100 AND 500;')",
+    "sql reply   : checked"
+   ],
+   "seconds": 2.8,
+   "tokens": 9568
+  },
+  {
+   "id": "count_exact",
+   "group": "counts",
+   "tags": [
+    "edge",
+    "regression"
+   ],
+   "question": "how many expenses of exactly 280?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=2",
+   "got": "There are 2 expenses of exactly ₹280.00.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) as count FROM my_expenses WHERE amount = 280",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses of exactly 280?' -> 'how many expenses of exactly 280?'  [first message]",
+    "sql ALLOWED : 1 rows  (2 ms)  period=in total  SELECT COUNT(*) as count FROM my_expenses WHERE amount = 280",
+    "tool call   -> run_sql_query(measure='', period='', sql='SELECT COUNT(*) as count FROM my_expenses WHERE amount = 280')",
+    "sql reply   : checked"
+   ],
+   "seconds": 2.6,
+   "tokens": 9551
+  },
+  {
+   "id": "count_below_100_last_month",
+   "group": "counts",
+   "tags": [],
+   "question": "how many expenses below 100 last month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "count=0",
+   "got": "There were 0 expenses below ₹100.00 last month.",
+   "problems": [],
+   "sql": "SELECT COUNT(*) AS count FROM my_expenses WHERE amount < 100\n-- period from your question: last month (2026-10-01 to 2026-10-31)",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "rewrite     : 'how many expenses below 100 last month?' -> 'how many expenses below 100 last month?'  [first message]",
+    "sql ALLOWED : 1 rows  (4 ms)  period=last month  SELECT COUNT(*) AS count FROM my_expenses WHERE amount < 100",
+    "tool call   -> run_sql_query(measure='', period='last month', sql='SELECT COUNT(*) AS count FROM my_expenses WHERE amount < 100')",
+    "sql reply   : checked"
+   ],
+   "seconds": 2.5,
+   "tokens": 9579
+  }
+ ]
+}

@@ -1,0 +1,261 @@
+{
+ "run": {
+  "date": "2026-11-07T15:15:18"
+ },
+ "today": "2026-11-07",
+ "expenses": 470,
+ "spikes": 5,
+ "forecast": {
+  "forecasts": 9,
+  "skipped_not_enough_data": 3,
+  "by_model": {
+   "forecast": {
+    "all": {
+     "n": 9,
+     "mae": 2493.44,
+     "mape": 5.35
+    },
+    "day_10": {
+     "n": 4,
+     "mae": 4287.12,
+     "mape": 9.19
+    },
+    "day_20": {
+     "n": 5,
+     "mae": 1058.5,
+     "mape": 2.28
+    }
+   },
+   "run_rate": {
+    "all": {
+     "n": 9,
+     "mae": 32490.59,
+     "mape": 60.85
+    },
+    "day_10": {
+     "n": 4,
+     "mae": 52570.52,
+     "mape": 97.13
+    },
+    "day_20": {
+     "n": 5,
+     "mae": 16426.64,
+     "mape": 31.82
+    }
+   },
+   "linear_regression": {
+    "all": {
+     "n": 9,
+     "mae": 2879.49,
+     "mape": 6.04
+    },
+    "day_10": {
+     "n": 4,
+     "mae": 5007.57,
+     "mape": 10.6
+    },
+    "day_20": {
+     "n": 5,
+     "mae": 1177.03,
+     "mape": 2.4
+    }
+   }
+  },
+  "range_coverage_percent": 66.7,
+  "range_coverage_without_later_spike_percent": 85.7
+ },
+ "backtest": [
+  {
+   "month": "2026-05",
+   "cutoff_day": 10,
+   "actual": 40961.0,
+   "status": "not_enough_data",
+   "spike_after": false,
+   "detail": "It needs about 6 weeks of history (you have 10 days) and at least 30 expenses (you have 29)."
+  },
+  {
+   "month": "2026-05",
+   "cutoff_day": 20,
+   "actual": 40961.0,
+   "status": "not_enough_data",
+   "spike_after": false,
+   "detail": "It needs about 6 weeks of history (you have 20 days)."
+  },
+  {
+   "month": "2026-06",
+   "cutoff_day": 10,
+   "actual": 47108.0,
+   "status": "not_enough_data",
+   "spike_after": true,
+   "detail": "It needs about 6 weeks of history (you have 41 days)."
+  },
+  {
+   "month": "2026-06",
+   "cutoff_day": 20,
+   "actual": 47108.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 48538.5,
+   "low": 46609.8,
+   "high": 51345.2,
+   "inside": true,
+   "run_rate": 62290.5,
+   "linear_regression": 48956.2
+  },
+  {
+   "month": "2026-07",
+   "cutoff_day": 10,
+   "actual": 43647.0,
+   "status": "ok",
+   "spike_after": true,
+   "forecast": 38975.0,
+   "low": 36258.6,
+   "high": 42479.1,
+   "inside": false,
+   "run_rate": 76095.7,
+   "linear_regression": 39158.83
+  },
+  {
+   "month": "2026-07",
+   "cutoff_day": 20,
+   "actual": 43647.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 42603.0,
+   "low": 41424.4,
+   "high": 44591.4,
+   "inside": true,
+   "run_rate": 56993.5,
+   "linear_regression": 43121.6
+  },
+  {
+   "month": "2026-08",
+   "cutoff_day": 10,
+   "actual": 51187.0,
+   "status": "ok",
+   "spike_after": true,
+   "forecast": 42526.5,
+   "low": 39987.0,
+   "high": 45964.0,
+   "inside": false,
+   "run_rate": 81061.9,
+   "linear_regression": 43276.56
+  },
+  {
+   "month": "2026-08",
+   "cutoff_day": 20,
+   "actual": 51187.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 49970.0,
+   "low": 48377.1,
+   "high": 52257.3,
+   "inside": true,
+   "run_rate": 63401.2,
+   "linear_regression": 50110.71
+  },
+  {
+   "month": "2026-09",
+   "cutoff_day": 10,
+   "actual": 41067.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 44745.0,
+   "low": 42442.0,
+   "high": 47922.0,
+   "inside": false,
+   "run_rate": 86502.0,
+   "linear_regression": 46796.54
+  },
+  {
+   "month": "2026-09",
+   "cutoff_day": 20,
+   "actual": 41067.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 42382.5,
+   "low": 40804.7,
+   "high": 44507.3,
+   "inside": true,
+   "run_rate": 54643.5,
+   "linear_regression": 42385.78
+  },
+  {
+   "month": "2026-10",
+   "cutoff_day": 10,
+   "actual": 70627.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 70765.0,
+   "low": 68238.0,
+   "high": 73848.6,
+   "inside": true,
+   "run_rate": 173150.5,
+   "linear_regression": 68724.87
+  },
+  {
+   "month": "2026-10",
+   "cutoff_day": 20,
+   "actual": 70627.0,
+   "status": "ok",
+   "spike_after": false,
+   "forecast": 70341.5,
+   "low": 68734.9,
+   "high": 72568.8,
+   "inside": true,
+   "run_rate": 98440.5,
+   "linear_regression": 69510.53
+  }
+ ],
+ "anomalies": {
+  "mad": {
+   "flagged": 5,
+   "true_positives": 5,
+   "false_positives": 0,
+   "precision": 1.0,
+   "recall": 1.0,
+   "missed": [],
+   "false_alarms": []
+  },
+  "iqr": {
+   "flagged": 5,
+   "true_positives": 5,
+   "false_positives": 0,
+   "precision": 1.0,
+   "recall": 1.0,
+   "missed": [],
+   "false_alarms": []
+  },
+  "meanstd": {
+   "flagged": 5,
+   "true_positives": 5,
+   "false_positives": 0,
+   "precision": 1.0,
+   "recall": 1.0,
+   "missed": [],
+   "false_alarms": []
+  },
+  "isolation_forest": {
+   "flagged": 75,
+   "true_positives": 5,
+   "false_positives": 70,
+   "precision": 0.067,
+   "recall": 1.0,
+   "missed": [],
+   "false_alarms": [
+    "2026-05-01 House rent ₹15000",
+    "2026-05-02 Cab ₹233",
+    "2026-05-06 Electricity bill ₹2237",
+    "2026-05-09 Dinner with friends ₹573",
+    "2026-05-10 Groceries ₹1034",
+    "2026-05-16 Dinner with friends ₹700",
+    "2026-05-16 Cab ₹327",
+    "2026-05-17 Groceries ₹685",
+    "2026-05-17 Petrol ₹595",
+    "2026-05-28 Petrol ₹765"
+   ]
+  }
+ },
+ "passed": true,
+ "problems": []
+}

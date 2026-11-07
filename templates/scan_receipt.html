@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Scan receipt · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scan.css') }}">
+{% endblock %}
+
+{% block content %}
+<header class="scan-head">
+    <h1>📷 Scan a receipt</h1>
+    <p class="muted">Restaurant &amp; delivery bills, pharmacy, groceries, online orders, electricity/mobile/internet bills, insurance, fuel, cab &amp; travel tickets, rent receipts or UPI screenshots. The AI reads it, you check it, nothing is saved until you click Confirm.</p>
+</header>
+
+{% if error %}
+<div class="alert alert-error scan-error" role="alert">
+    <strong>{{ error }}</strong>
+    {% if error_detail %}<br><small>{{ error_detail }}</small>{% endif %}
+    {% if unavailable %}<br><a href="{{ url_for('add_expense_page') }}">Add the expense manually instead →</a>{% endif %}
+</div>
+{% endif %}
+
+{% if not result %}
+{% if not scan_disabled %}
+{# ---------- Step 1: upload ---------- #}
+<form method="post" action="{{ url_for('scan_receipt_page') }}" enctype="multipart/form-data"
+      class="scan-upload" id="scan-form">
+    <label class="drop-zone" id="drop-zone" for="receipt">
+        <input type="file" id="receipt" name="receipt" accept="image/jpeg,image/png,application/pdf,.pdf" required>
+        <span class="drop-icon" aria-hidden="true">🧾</span>
+        <span class="drop-title">Drop a bill photo or PDF here, or <u>choose a file</u></span>
+        <span class="drop-hint">JPG, PNG or PDF (first page) · up to 5 MB</span>
+        <img id="drop-preview" class="drop-preview" alt="" hidden>
+        <span id="drop-name" class="drop-name"></span>
+    </label>
+    <div class="scan-actions">
+        <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn" id="scan-submit">✨ Read receipt</button>
+    </div>
+    <div class="scan-loading" id="scan-loading" hidden>
+        <div class="scan-loader" aria-hidden="true"><span></span></div>
+        <p><strong>Reading your receipt...</strong><br>
+           <span class="muted">Cleaning the image, then the AI reads it. This can take 10–30 seconds.</span></p>
+    </div>
+</form>
+{% endif %}{# scan_disabled #}
+{% else %}
+{# ---------- Step 2: review & confirm ---------- #}
+<div class="scan-review">
+    <section class="panel scan-image-panel">
+        <div class="image-toggle" role="group" aria-label="Which image to show">
+            <button type="button" class="toggle-btn active" data-show="original" aria-pressed="true">Original</button>
+            <button type="button" class="toggle-btn" data-show="processed" aria-pressed="false">Cleaned (OpenCV)</button>
+        </div>
+        <div class="receipt-frame">
+            <img src="{{ result.original_image }}" alt="Your uploaded receipt" class="receipt-img" data-image="original">
+            <img src="{{ result.processed_image }}" alt="Receipt after OpenCV clean-up (grayscale, contrast, sharpened)"
+                 class="receipt-img" data-image="processed" hidden>
+        </div>
+        <p class="image-info muted">
+            {{ result.image_info.source }} · {{ result.image_info.original_size }} px
+            {% if result.image_info.resized %}→ resized to {{ result.image_info.processed_size }} px{% endif %}
+            · grayscale · contrast · sharpened
+        </p>
+    </section>
+
+    <section class="form-card scan-form-card">
+        <h2>{{ "✅ Check the details" if result.readable else "✍️ Fill in the details" }}</h2>
+        <p class="form-subtitle">Compare with the receipt and fix anything that's wrong.</p>
+        {% if result.business_type %}
+        <p class="detected-type">Detected: <strong>{{ result.business_type.replace('_', ' ').replace('mobile internet dth', 'mobile / internet / DTH') | capitalize }}</strong>
+            → {{ result.category | cat_icon }} {{ result.category }}</p>
+        {% endif %}
+
+        {% for note in result.notes %}
+        <div class="alert {{ 'alert-error' if loop.first and not result.readable else 'alert-warning' }} scan-note" role="status">{{ note }}</div>
+        {% endfor %}
+
+        <form method="post" action="{{ url_for('add_expense_page') }}">
+            <div class="field">
+                <label for="amount">Amount paid (₹)</label>
+                <div class="input-prefix">
+                    <span aria-hidden="true">₹</span>
+                    <input type="number" id="amount" name="amount" value="{{ result.amount }}"
+                           step="0.01" min="0.01" inputmode="decimal" placeholder="0.00" required
+                           {% if not result.amount %}autofocus{% endif %}>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="category">Category</label>
+                <select id="category" name="category" required>
+                    {% for category in categories %}
+                    <option value="{{ category }}" {% if result.category == category %}selected{% endif %}>{{ category | cat_icon }} {{ category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="{{ result.date }}" required>
+            </div>
+
+            <div class="field">
+                <label for="description">Description <span class="optional">(optional)</span></label>
+                <textarea id="description" name="description" rows="3" maxlength="200">{{ result.description }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('profile') }}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn">Confirm &amp; save</button>
+            </div>
+        </form>
+        <p class="form-footer"><a href="{{ url_for('scan_receipt_page') }}">Scan a different receipt</a></p>
+    </section>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/scan.js') }}"></script>
+{% endblock %}

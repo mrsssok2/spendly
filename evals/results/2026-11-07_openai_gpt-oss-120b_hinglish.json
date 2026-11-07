@@ -1,0 +1,360 @@
+{
+ "run": {
+  "date": "2026-11-07T18:47:39",
+  "today": "2026-11-07",
+  "provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "vision_model": "qwen/qwen3.8-27b",
+  "tokens": 110012,
+  "not_run": 0,
+  "judge_model": null,
+  "cases": 12,
+  "seconds": 191.3,
+  "selection": "hinglish",
+  "database": "temporary copy of spendly.db"
+ },
+ "score": {
+  "overall": {
+   "passed": 12,
+   "total": 12,
+   "percent": 100.0
+  },
+  "by_group": {
+   "actions": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   },
+   "hinglish": {
+    "passed": 8,
+    "total": 8,
+    "percent": 100.0
+   },
+   "ml": {
+    "passed": 1,
+    "total": 1,
+    "percent": 100.0
+   }
+  },
+  "by_tag": {
+   "hinglish": {
+    "passed": 4,
+    "total": 4,
+    "percent": 100.0
+   },
+   "regression": {
+    "passed": 3,
+    "total": 3,
+    "percent": 100.0
+   }
+  }
+ },
+ "judge": {
+  "status": "not run (use --judge)"
+ },
+ "failures": [],
+ "cases": [
+  {
+   "id": "hi_today_total",
+   "group": "hinglish",
+   "tags": [],
+   "question": "aaj kitna kharcha hua?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=360",
+   "got": "You spent ₹360 today across 2 expenses.\nBy category: Transport ₹280, Food ₹80",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'aaj kitna kharcha hua?'",
+    "rewrite     : 'How much did I spend today?' -> 'How much did I spend today?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='today')"
+   ],
+   "seconds": 7.3,
+   "tokens": 9979
+  },
+  {
+   "id": "hi_food_this_month",
+   "group": "hinglish",
+   "tags": [],
+   "question": "is mahine khane pe kitna kharch kiya?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=530",
+   "got": "You spent ₹530 on Food this month across 2 expenses.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'is mahine khane pe kitna kharch kiya?'",
+    "rewrite     : 'How much did I spend on food this month?' -> 'How much did I spend on food this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='Food', period='this month')"
+   ],
+   "seconds": 15.5,
+   "tokens": 10006
+  },
+  {
+   "id": "hi_last_month",
+   "group": "hinglish",
+   "tags": [],
+   "question": "pichle mahine kitna kharcha hua?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=4920",
+   "got": "You spent ₹4,920 last month across 9 expenses.\nBy category: Bills ₹2,000, Transport ₹900, Food ₹800, Shopping ₹700, Health ₹520",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'pichle mahine kitna kharcha hua?'",
+    "rewrite     : 'How much did I spend last month?' -> 'How much did I spend last month?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='last month')"
+   ],
+   "seconds": 8.1,
+   "tokens": 10009
+  },
+  {
+   "id": "hi_yesterday",
+   "group": "hinglish",
+   "tags": [],
+   "question": "kal kitne paise kharch kiye?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=545",
+   "got": "You spent ₹545 yesterday across 2 expenses.\nBy category: Food ₹450, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'kal kitne paise kharch kiye?'",
+    "rewrite     : 'How much did I spend yesterday?' -> 'How much did I spend yesterday?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='yesterday')"
+   ],
+   "seconds": 6.5,
+   "tokens": 9967
+  },
+  {
+   "id": "hi_avg",
+   "group": "hinglish",
+   "tags": [],
+   "question": "mera average kharcha kitna hai?",
+   "turns": [],
+   "status": "pass",
+   "expected": "avg=511.75",
+   "got": "Average amount per expense: ₹511.75 (20 expenses).",
+   "problems": [],
+   "sql": "SELECT ROUND(AVG(amount), 2) AS value, COUNT(*) AS count, COALESCE(ROUND(SUM(amount), 2), 0) AS total FROM expenses WHERE user_id = ? AND (? IS NULL OR date >= ?) AND (? IS NULL OR date <= ?) AND (? IS NULL OR category = ?)\n-- Spendly template 'average_per_expense' (fixed query; the AI only picked it)\n-- your expenses only, all time",
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'mera average kharcha kitna hai?'",
+    "rewrite     : 'How much is my average expense?' -> 'How much is my average expense?'  [first message]",
+    "sql TEMPLATE: average_per_expense from the user's words  (7 ms)  period=in total -> 'Average amount per expense: ₹511.75 (20 expenses).'",
+    "tool call   -> run_sql_query(measure='average_per_expense', period='')",
+    "sql reply   : template average_per_expense: answer written by code"
+   ],
+   "seconds": 5.5,
+   "tokens": 9993
+  },
+  {
+   "id": "dev_this_month",
+   "group": "hinglish",
+   "tags": [],
+   "question": "इस महीने कितना खर्च हुआ?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "You spent ₹3,465 this month across 8 expenses.\nBy category: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'इस महीने कितना खर्च हुआ?'",
+    "rewrite     : 'How much was spent this month?' -> 'How much was spent this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='this month')"
+   ],
+   "seconds": 18.8,
+   "tokens": 10003
+  },
+  {
+   "id": "dev_food_last_week",
+   "group": "hinglish",
+   "tags": [],
+   "question": "पिछले हफ्ते खाने पर कितना खर्च किया?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=250",
+   "got": "You spent ₹250 on Food last week across 1 expense.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "tools": [
+    "translate   : original   'पिछले हफ्ते खाने पर कितना खर्च किया?'",
+    "rewrite     : 'How much did I spend on food last week?' -> 'How much did I spend on food last week?'  [first message]",
+    "tool call   -> get_spending_summary(category='Food', period='last week')"
+   ],
+   "seconds": 34.2,
+   "tokens": 9990
+  },
+  {
+   "id": "add_hinglish_chai",
+   "group": "actions",
+   "tags": [
+    "hinglish",
+    "regression"
+   ],
+   "question": "aaj chai pe 30 rupaye kharch kiye",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 30, \"category\": \"Food\", \"date\": \"2026-11-07\"}]",
+   "got": "Your chai expense of ₹30 is ready for review. Please click Confirm to add it.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 30.0,
+     "category": "Food",
+     "date": "2026-11-07",
+     "description": "chai"
+    }
+   ],
+   "tools": [
+    "translate   : original   'aaj chai pe 30 rupaye kharch kiye'",
+    "rewrite     : 'Spent 30 on chai today' -> 'Spent 30 on chai today'  [first message]",
+    "tool call   -> add_expense_tool(amount=30, category='Food', date='2026-11-07', description='chai')"
+   ],
+   "seconds": 7.7,
+   "tokens": 10037
+  },
+  {
+   "id": "add_hinglish_auto",
+   "group": "actions",
+   "tags": [
+    "hinglish",
+    "regression"
+   ],
+   "question": "kal auto mein 120 diye",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"add\", \"amount\": 120, \"category\": \"Transport\", \"date\": \"2026-11-06\"}]",
+   "got": "Your auto expense of ₹120 for 06 Nov 2026 is ready for review. Please click Confirm to add it.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "add",
+     "amount": 120.0,
+     "category": "Transport",
+     "date": "2026-11-06",
+     "description": "auto"
+    }
+   ],
+   "tools": [
+    "translate   : original   'kal auto mein 120 diye'",
+    "rewrite     : 'Spent 120 on auto yesterday' -> 'Spent 120 on auto yesterday'  [first message]",
+    "tool call   -> add_expense_tool(amount=120, category='Transport', date='2026-11-06', description='auto')"
+   ],
+   "seconds": 6.8,
+   "tokens": 10034
+  },
+  {
+   "id": "edit_movie_hinglish",
+   "group": "actions",
+   "tags": [
+    "hinglish",
+    "regression"
+   ],
+   "question": "movie 300 tha nahi, 350 tha",
+   "turns": [],
+   "status": "pass",
+   "expected": "[{\"type\": \"edit\", \"before\": {\"description\": \"movie\", \"amount\": 300}, \"after\": {\"amount\": 350}}]",
+   "got": "Your change is ready for review. Please click Confirm to apply it.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "got_previews": [
+    {
+     "type": "edit",
+     "before": {
+      "amount": 300.0,
+      "category": "Entertainment",
+      "date": "2026-11-03",
+      "description": "movie"
+     },
+     "after": {
+      "amount": 350.0,
+      "category": "Entertainment",
+      "date": "2026-11-03",
+      "description": "movie"
+     }
+    }
+   ],
+   "tools": [
+    "translate   : original 'movie 300 tha nahi, 350 tha' -> correction written by code 'the movie was not 300, it was 350'",
+    "rewrite     : 'the movie was not 300, it was 350' -> 'the movie was not 300, it was 350'  [first message]",
+    "tool call   -> update_expense_tool(match_description='movie', new_amount=350)"
+   ],
+   "seconds": 4.2,
+   "tokens": 9547
+  },
+  {
+   "id": "hinglish_reply",
+   "group": "hinglish",
+   "tags": [],
+   "question": "how much did I spend this month?",
+   "turns": [],
+   "status": "pass",
+   "expected": "sum=3465",
+   "got": "Aapne is mahine ₹3,465 kharch kiye 8 expenses mein.  \nCategory ke hisaab se: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹300, Health ₹95",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "guard": null,
+   "judge": {
+    "status": "skipped (run with --judge)"
+   },
+   "tools": [
+    "rewrite     : 'how much did I spend this month?' -> 'how much did I spend this month?'  [first message]",
+    "tool call   -> get_spending_summary(category='', period='this month')",
+    "reply hindi : 'Aapne is mahine ₹3,465 kharch kiye 8 expenses mein.  \\nCategory ke hisaab se: Bills ₹1,200, Shopping ₹1,000, Food ₹530, Transport ₹340, Entertainment ₹'  [translated]"
+   ],
+   "seconds": 6.6,
+   "tokens": 9943
+  },
+  {
+   "id": "ml_forecast_hinglish",
+   "group": "ml",
+   "tags": [
+    "hinglish"
+   ],
+   "question": "is mahine kitna kharch hoga?",
+   "turns": [],
+   "status": "pass",
+   "expected": "₹38,800, ₹36,400, ₹42,100",
+   "got": "By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likely go over your ₹37,000 budget around 28 Nov.\nBiggest categories: Bills about ₹17,700, Food about ₹12,200, Transport about ₹4,400.",
+   "problems": [],
+   "sql": null,
+   "http": 200,
+   "tools": [
+    "translate   : original   'is mahine kitna kharch hoga?'",
+    "rewrite     : 'How much will be spent this month?' -> 'How much will be spent this month?'  [first message]",
+    "code answer : \"By the end of November 2026 you'll likely spend about ₹38,800 (probably between ₹36,400 and ₹42,100). So far: ₹22,385, with 23 days left. You'll likel\""
+   ],
+   "seconds": 7.4,
+   "tokens": 504
+  }
+ ]
+}

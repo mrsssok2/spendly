@@ -1,0 +1,358 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile · Spendly{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="profile-header">
+    <svg class="header-waves" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 140 C 150 90, 300 190, 600 110 L600 200 L0 200 Z" fill="rgba(255,255,255,0.08)"/>
+        <path d="M0 170 C 200 120, 380 210, 600 150 L600 200 L0 200 Z" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="520" cy="40" r="60" fill="rgba(255,255,255,0.07)"/>
+    </svg>
+    <div class="avatar">{{ user.name[0] | upper }}</div>
+    <div class="profile-intro">
+        <p class="profile-hello">Welcome back 👋</p>
+        <h1>{{ user.name }}</h1>
+        <p class="profile-meta">{{ user.email }} · Joined {{ user.created_at | nice_date }}</p>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('scan_receipt_page') }}" class="btn scan-receipt-btn">📷 Scan receipt</a>
+        <a href="{{ url_for('add_income_page') }}" class="btn scan-receipt-btn">＋ Add Income</a>
+        <a href="{{ url_for('add_expense_page') }}" class="btn add-expense-btn">＋ Add Expense</a>
+    </div>
+</section>
+
+<section class="panel ai-panel" id="ai-assistant"
+         data-ask-url="{{ url_for('ai_assistant') }}"
+         data-select-url="{{ url_for('ai_select') }}"
+         data-confirm-url="{{ url_for('ai_confirm') }}"
+         data-cancel-url="{{ url_for('ai_cancel') }}"
+         data-history-url="{{ url_for('ai_history') }}"
+         data-new-chat-url="{{ url_for('ai_new_chat') }}"
+         data-voice-url="{{ url_for('ai_voice') }}"
+         data-voice-status-url="{{ url_for('ai_voice_status') }}">
+    <div class="ai-header">
+        <div class="ai-title">
+            <span class="ai-bot" aria-hidden="true">🤖</span>
+            <div>
+                <h2>AI assistant</h2>
+                <p class="ai-status"><span class="ai-dot" aria-hidden="true"></span>{{ ai_text.assistant_status }}</p>
+            </div>
+        </div>
+        <div class="ai-header-actions">
+            <button type="button" class="btn btn-sm btn-secondary ai-speak-toggle" id="ai-speak"
+                    aria-pressed="false" title="Read replies aloud" hidden>🔈<span class="visually-hidden"> Read replies aloud</span></button>
+            <button type="button" class="btn btn-sm btn-secondary" id="ai-new-chat">New chat</button>
+        </div>
+    </div>
+    <p class="muted ai-hint">Add, edit or delete expenses in plain words, e.g. “spent 250 on auto and 120 on chai today”, “change auto to 280” or “delete the dolo expense”. You can also ask questions like “how much did I spend on Food this month?” or “how much budget do I have left?”, set budgets: “set my food budget to 1000”, and track income: “got salary 30000 today”, “what's my savings rate?”. Press 🎤 to speak instead of typing: pick EN for English, or हिंदी to speak Hindi (it's translated to English). Nothing changes until you click Confirm.</p>
+    <div class="ai-chat" id="ai-chat" aria-live="polite"></div>
+    <form class="ai-form" id="ai-form">
+        <label for="ai-message" class="visually-hidden">Message to the AI assistant</label>
+        <input type="text" id="ai-message" maxlength="500" autocomplete="off"
+               placeholder="e.g. yesterday 1500 for electricity bill">
+        <button type="button" class="btn btn-sm btn-secondary ai-lang" id="ai-voice-lang" data-lang="en"
+                title="Voice language: English (click for Hindi)">EN<span class="visually-hidden"> voice language</span></button>
+        <button type="button" class="btn btn-sm btn-secondary ai-mic" id="ai-mic"
+                aria-pressed="false" title="Speak your message (English or Hindi)">🎤<span class="visually-hidden"> Speak your message</span></button>
+        <button type="submit" class="btn btn-sm" id="ai-send">Send ➤</button>
+    </form>
+    <div class="ai-voice-bar">
+        <p class="ai-voice-status" id="ai-voice-status" role="status" aria-live="polite"></p>
+        <div class="ai-settings">
+            <label class="ai-autosend" for="ai-reply-hindi" title="Replies in Hinglish; ₹ amounts and dates stay exactly the same">
+                <input type="checkbox" id="ai-reply-hindi"> Reply in Hindi
+            </label>
+            <label class="ai-autosend" for="ai-autosend">
+                <input type="checkbox" id="ai-autosend"> Auto-send after speaking
+            </label>
+        </div>
+    </div>
+</section>
+
+{# Everything inside #profile-data is refreshed by ai_assistant.js after AI expenses are saved. #}
+<div id="profile-data">
+{% for alert in budget_alerts %}
+<div class="alert {{ 'alert-error' if alert.startswith('🚨') else 'alert-warning' }} budget-alert" role="status">{{ alert }}</div>
+{% endfor %}
+
+{# Income, expenses, balance and savings rate all come from SQL and follow the date filter. #}
+<section class="summary-cards money-cards">
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-income" aria-hidden="true">💵</span>
+        <p class="card-label">Income</p>
+        <p class="card-value" data-count="{{ money.income }}">{{ money.income | inr }}</p>
+        <p class="card-sub">{{ money.income_count }} entr{{ "y" if money.income_count == 1 else "ies" }}</p>
+    </div>
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-1" aria-hidden="true">💸</span>
+        <p class="card-label">Expenses</p>
+        <p class="card-value" data-count="{{ summary.total }}">{{ summary.total | inr }}</p>
+        <p class="card-sub">{{ summary.count }} expense{{ "" if summary.count == 1 else "s" }}{% if top_category %} · top: {{ top_category.name | cat_icon }} {{ top_category.name }}{% endif %}</p>
+    </div>
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-2" aria-hidden="true">⚖️</span>
+        <p class="card-label">Balance</p>
+        <p class="card-value {{ 'money-positive' if money.balance >= 0 else 'money-negative' }}">
+            {{ ("−" if money.balance < 0 else "") ~ ((money.balance | abs) | inr) }}
+        </p>
+        <p class="card-sub">Income − expenses</p>
+    </div>
+    <div class="card stat-card">
+        <span class="stat-icon stat-icon-3" aria-hidden="true">🐷</span>
+        <p class="card-label">Savings rate</p>
+        {% if money.savings_rate is none %}
+        <p class="card-value">—</p>
+        <p class="card-sub">Add income to see it</p>
+        {% else %}
+        <p class="card-value {{ 'money-positive' if money.savings_rate >= 0 else 'money-negative' }}">{{ money.savings_rate }}%</p>
+        <p class="card-sub">of your income {{ "saved" if money.savings_rate >= 0 else "overspent" }}</p>
+        {% endif %}
+    </div>
+</section>
+
+{# Month-end forecast (forecast.py: weekday/weekend habits + monthly bills, simulated 1,000 times).
+   Always this month, whatever the date filter. #}
+<section class="panel forecast-panel" aria-labelledby="forecast-heading">
+    <div class="panel-head">
+        <h2 id="forecast-heading"><span aria-hidden="true">🔮</span> Month-end forecast <span class="chart-subtitle muted">{{ this_month_label }}</span></h2>
+        {% if forecast.status == "ok" %}
+        <a href="{{ url_for('analytics') }}#forecast" class="link-button forecast-link">See chart →</a>
+        {% endif %}
+    </div>
+    {% if forecast.status == "ok" %}
+    <div class="forecast-main">
+        <div>
+            <p class="card-label">Likely total by month-end</p>
+            <p class="forecast-value">{{ forecast.expected | inr }}</p>
+            {% if forecast.low != forecast.high %}
+            <p class="forecast-range">Probably between <strong>{{ forecast.low | inr }}</strong> and <strong>{{ forecast.high | inr }}</strong></p>
+            {% endif %}
+        </div>
+        <div class="forecast-sofar">
+            <p class="card-label">Spent so far</p>
+            <p class="forecast-spent">{{ forecast.spent | inr }}</p>
+            <p class="muted">{{ forecast.days_left }} day{{ "" if forecast.days_left == 1 else "s" }} left</p>
+        </div>
+    </div>
+    <div class="forecast-bar" role="img"
+         aria-label="Spent {{ forecast.spent | inr }} so far; likely {{ forecast.expected | inr }}, range {{ forecast.low | inr }} to {{ forecast.high | inr }}{% if forecast.budget %}; budget {{ forecast.budget.limit | inr }}{% endif %}">
+        <div class="forecast-bar-range" style="left: {{ forecast.bar.low }}%; width: {{ [forecast.bar.high - forecast.bar.low, 0.6] | max }}%"></div>
+        <div class="forecast-bar-spent" style="width: {{ forecast.bar.spent }}%"></div>
+        <div class="forecast-bar-expected" style="left: {{ forecast.bar.expected }}%"></div>
+        {% if forecast.bar.budget %}<div class="forecast-bar-budget" style="left: {{ forecast.bar.budget }}%" title="Budget {{ forecast.budget.limit | inr }}"></div>{% endif %}
+    </div>
+    <p class="forecast-legend muted">
+        <span class="legend-dot legend-spent"></span> spent
+        <span class="legend-dot legend-range"></span> likely range
+        {% if forecast.budget %}<span class="legend-dot legend-budget"></span> budget{% endif %}
+    </p>
+    {% if forecast.budget %}
+    <div class="alert {{ 'alert-error' if forecast.budget.status in ('over', 'likely') else ('alert-warning' if forecast.budget.status == 'maybe' else 'alert-success') }} forecast-alert" role="status">
+        {{ "🚨" if forecast.budget.status in ('over', 'likely') else ("⚠️" if forecast.budget.status == 'maybe' else "✅") }} {{ forecast.budget.message }}
+    </div>
+    {% endif %}
+    {% if forecast.categories %}
+    <ul class="forecast-cats">
+        {% for c in forecast.categories %}
+        <li>
+            <span class="category-name"><span class="category-icon {{ c.category | cat_class }}" aria-hidden="true">{{ c.category | cat_icon }}</span>{{ c.category }}</span>
+            <span class="forecast-cat-value">{{ c.expected | inr }}{% if c.low != c.high %} <span class="muted">({{ c.low | inr }}–{{ c.high | inr }})</span>{% endif %}</span>
+            {% if c.budget and c.budget.status in ('over', 'likely', 'maybe') %}
+            <span class="forecast-cat-note {{ 'money-negative' if c.budget.status != 'maybe' else '' }}">{{ c.budget.message }}</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p class="muted forecast-note">Based on your last 90 days: weekday vs weekend habits and monthly bills (rent, subscriptions). One-off unusual expenses are left out.</p>
+    {% else %}
+    <p class="muted empty-line"><strong>{{ forecast.message }}.</strong> {{ forecast.detail }}</p>
+    {% endif %}
+</section>
+
+<section class="panel budgets-panel" aria-labelledby="budgets-heading">
+    <h2 id="budgets-heading"><span aria-hidden="true">🎯</span> Budgets <span class="chart-subtitle muted">{{ this_month_label }}</span></h2>
+
+    {% if budgets %}
+    <ul class="budget-list">
+        {% for b in budgets %}
+        <li class="budget-row">
+            <div class="budget-info">
+                <span class="budget-name"><span class="budget-icon" aria-hidden="true">{{ b.category | cat_icon if b.category else "🎯" }}</span>{{ b.name }}</span>
+                <span class="budget-amounts">
+                    {{ b.spent | inr }} of {{ b.monthly_limit | inr }} · {{ b.percent }}%
+                    {% if b.remaining >= 0 %}· {{ b.remaining | inr }} left{% else %}· {{ (-b.remaining) | inr }} over{% endif %}
+                </span>
+            </div>
+            <div class="bar budget-bar" role="progressbar" aria-label="{{ b.name }} budget used"
+                 aria-valuenow="{{ b.percent }}" aria-valuemin="0" aria-valuemax="100">
+                <div class="bar-fill budget-{{ b.level }}" style="width: {{ b.bar_width }}%"></div>
+            </div>
+            <form method="post" action="{{ url_for('remove_budget') }}" class="budget-remove"
+                  data-confirm="Remove the {{ b.name }} budget?">
+                <input type="hidden" name="category" value="{{ b.category or '' }}">
+                <button type="submit" class="link-button">Remove</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p class="muted empty-line">No budgets yet. Set a monthly limit to see how much you have left.</p>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('save_budget') }}" class="budget-form">
+        <div class="filter-field">
+            <label for="budget-category">Budget for</label>
+            <select id="budget-category" name="category">
+                <option value="">🎯 Overall (all spending)</option>
+                {% for c in budget_categories %}<option value="{{ c }}">{{ c | cat_icon }} {{ c }}</option>{% endfor %}
+            </select>
+        </div>
+        <div class="filter-field">
+            <label for="budget-amount">Monthly limit (₹)</label>
+            <input type="number" id="budget-amount" name="amount" min="0.01" step="0.01" required placeholder="2000">
+        </div>
+        <button type="submit" class="btn btn-sm">Save budget</button>
+    </form>
+</section>
+
+{% if has_any_expenses or has_any_income %}
+{% include "_date_filter.html" %}
+{% endif %}
+
+{% if not has_any_expenses %}
+<section class="panel empty-state">
+    <div class="empty-art" aria-hidden="true">🪙</div>
+    <h2>No expenses yet</h2>
+    <p class="muted">Once you start adding expenses, your spending breakdown and transactions will show up here.</p>
+    <a href="{{ url_for('add_expense_page') }}" class="btn empty-cta">＋ Add your first expense</a>
+</section>
+{% elif not expenses %}
+<section class="panel empty-state">
+    <div class="empty-art" aria-hidden="true">🔍</div>
+    <h2>No expenses in this date range</h2>
+    <p class="muted">Try a different range, or view all your expenses.</p>
+    <a href="{{ url_for('profile') }}" class="btn btn-secondary empty-cta">Show all time</a>
+</section>
+{% else %}
+<section class="panel">
+    <h2><span aria-hidden="true">🍩</span> Spending by category</h2>
+    <ul class="category-list">
+        {% for category in categories %}
+        <li class="category-row">
+            <div class="category-info">
+                <span class="category-name"><span class="category-icon {{ category.name | cat_class }}" aria-hidden="true">{{ category.name | cat_icon }}</span>{{ category.name }}</span>
+                <span class="category-amount">{{ category.total | inr }} · {{ category.percent }}%</span>
+            </div>
+            <div class="bar" aria-hidden="true">
+                <div class="bar-fill {{ category.name | cat_class }}" style="width: {{ category.percent }}%"></div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section class="panel">
+    <h2><span aria-hidden="true">🧾</span> Transactions</h2>
+    <div class="table-wrap">
+        <table class="transactions">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th class="num">Amount</th>
+                    <th class="actions-col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td class="date-cell">{{ expense.date | nice_date }}</td>
+                    <td><span class="tag {{ expense.category | cat_class }}"><span aria-hidden="true">{{ expense.category | cat_icon }}</span> {{ expense.category }}</span></td>
+                    <td>
+                        {{ expense.description or "—" }}
+                        {% set flag = anomalies.get(expense.id) %}
+                        {% if flag %}
+                        <details class="anomaly-flag">
+                            <summary title="{{ flag.explanation }}"><span aria-hidden="true">⚠️</span><span class="visually-hidden">Unusual expense: why?</span></summary>
+                            <div class="anomaly-pop" role="note">
+                                <p><strong>Unusual:</strong> {{ flag.explanation }}.</p>
+                                <form method="post" action="{{ url_for('mark_expense_normal', expense_id=expense.id) }}">
+                                    <input type="hidden" name="date_from" value="{{ date_from }}">
+                                    <input type="hidden" name="date_to" value="{{ date_to }}">
+                                    <button type="submit" class="btn btn-sm btn-secondary">This is normal</button>
+                                </form>
+                            </div>
+                        </details>
+                        {% endif %}
+                    </td>
+                    <td class="num amount-cell">{{ expense.amount | inr }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('edit_expense_page', expense_id=expense.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                        <form method="post" action="{{ url_for('delete_expense_page', expense_id=expense.id) }}"
+                              class="inline-form" data-confirm="Delete this expense?">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endif %}
+
+<section class="panel income-panel">
+    <div class="panel-head">
+        <h2><span aria-hidden="true">💵</span> Income</h2>
+        <a href="{{ url_for('add_income_page') }}" class="btn btn-sm btn-secondary">＋ Add Income</a>
+    </div>
+    {% if incomes %}
+    <div class="table-wrap">
+        <table class="transactions">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Source</th>
+                    <th>Description</th>
+                    <th class="num">Amount</th>
+                    <th class="actions-col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for income in incomes %}
+                <tr>
+                    <td class="date-cell">{{ income.date | nice_date }}</td>
+                    <td><span class="tag tag-income"><span aria-hidden="true">{{ income.source | source_icon }}</span> {{ income.source }}</span></td>
+                    <td>{{ income.description or "—" }}</td>
+                    <td class="num amount-cell money-positive">+{{ income.amount | inr }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('edit_income_page', income_id=income.id) }}" class="btn btn-sm btn-secondary">Edit</a>
+                        <form method="post" action="{{ url_for('delete_income_page', income_id=income.id) }}"
+                              class="inline-form" data-confirm="Delete this income entry?">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif has_any_income %}
+    <p class="muted empty-line">No income in this date range.</p>
+    {% else %}
+    <p class="muted empty-line">No income yet. Add your salary or other money coming in to see your balance and savings rate.</p>
+    {% endif %}
+</section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/ai_assistant.js') }}"></script>
+{% endblock %}
